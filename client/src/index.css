@@ -10,19 +10,19 @@
     --card-foreground: 222.2 84% 4.9%;
     --popover: 0 0% 100%;
     --popover-foreground: 222.2 84% 4.9%;
-    --primary: 207 90% 54%;
+    --primary: 217 91% 60%;
     --primary-foreground: 210 40% 98%;
-    --secondary: 210 40% 96%;
+    --secondary: 220 14% 96%;
     --secondary-foreground: 222.2 84% 4.9%;
-    --muted: 210 40% 96%;
+    --muted: 220 14% 96%;
     --muted-foreground: 215.4 16.3% 46.9%;
-    --accent: 210 40% 96%;
+    --accent: 220 14% 96%;
     --accent-foreground: 222.2 84% 4.9%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 207 90% 54%;
+    --border: 220 13% 91%;
+    --input: 220 13% 91%;
+    --ring: 217 91% 60%;
     --radius: 0.5rem;
   }
  
@@ -33,7 +33,7 @@
     --card-foreground: 210 40% 98%;
     --popover: 222.2 84% 4.9%;
     --popover-foreground: 210 40% 98%;
-    --primary: 207 90% 54%;
+    --primary: 217 91% 60%;
     --primary-foreground: 222.2 84% 4.9%;
     --secondary: 217.2 32.6% 17.5%;
     --secondary-foreground: 210 40% 98%;
@@ -45,7 +45,7 @@
     --destructive-foreground: 210 40% 98%;
     --border: 217.2 32.6% 17.5%;
     --input: 217.2 32.6% 17.5%;
-    --ring: 207 90% 54%;
+    --ring: 217 91% 60%;
   }
 }
 
@@ -77,7 +77,7 @@
     animation: spin 1s linear infinite;
   }
 
-  /* Solid backgrounds for all UI components */
+  /* Fondos para componentes UI */
   .popover-content,
   .dialog-content,
   .dropdown-menu-content,
@@ -88,28 +88,25 @@
   .command-content,
   .accordion-content,
   .tabs-content {
-    background: #f0f0f0 !important;
-    border: 1px solid #d1d5db !important;
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1) !important;
-    backdrop-filter: none !important;
+    @apply bg-white border-gray-200 shadow-lg;
   }
 
-  /* Specific backgrounds for different components */
+  /* Fondos específicos para diferentes componentes */
   .select-content {
-    background: #f0f0f0 !important;
+    @apply bg-white border border-gray-200;
   }
 
   .dropdown-menu-content {
-    background: #f5f5f5 !important;
+    @apply bg-white border border-gray-200;
   }
 
   .dialog-content {
-    background: #ffffff !important;
+    @apply bg-white border border-gray-200;
   }
 
-  /* Voice note window */
+  /* Ventana de notas de voz */
   .voice-note-window {
-    background: #f8f8f8 !important;
+    @apply bg-white border border-gray-200;
   }
 
   .dark .popover-content,
@@ -122,38 +119,106 @@
   .dark .command-content,
   .dark .accordion-content,
   .dark .tabs-content {
-    background: hsl(var(--card)) !important;
+    @apply bg-gray-900 border-gray-700;
   }
 
-  /* Solid backgrounds for form elements */
+  /* Fondos para elementos de formulario */
   .input,
   .textarea,
   .select-trigger {
-    @apply bg-white border-gray-300 !important;
+    @apply bg-white border-gray-200;
   }
 
   .card {
-    @apply bg-white border-gray-200 !important;
+    @apply bg-white border-gray-200;
   }
 
-  /* Solid backgrounds for overlays */
+  /* Fondos para overlays */
   .dialog-overlay,
   .sheet-overlay {
-    background: rgba(0, 0, 0, 0.8) !important;
+    @apply bg-black/50 backdrop-blur-sm;
   }
 
   .dark .dialog-overlay,
   .dark .sheet-overlay {
-    background: rgba(0, 0, 0, 0.9) !important;
+    @apply bg-black/70;
   }
 
-  /* Button solid backgrounds */
+  /* Fondos para botones */
   .button {
-    @apply bg-white border-gray-200 hover:bg-gray-50 !important;
+    @apply bg-white border-gray-200 hover:bg-gray-50;
   }
 
   .button[data-variant="default"] {
-    @apply bg-blue-600 hover:bg-blue-700 text-white border-blue-600 !important;
+    @apply bg-blue-600 hover:bg-blue-700 text-white border-blue-600;
+  }
+
+  /* Estilos para botones y selectores */
+  .button-primary {
+    @apply bg-blue-600 hover:bg-blue-700 text-white;
+  }
+
+  .button-secondary {
+    @apply bg-gray-100 hover:bg-gray-200 text-gray-900;
+  }
+
+  .select-trigger {
+    @apply bg-white border-gray-200 hover:border-blue-500;
+  }
+
+  .select-item {
+    @apply hover:bg-blue-50;
+  }
+
+  /* Estilos para tarjetas y contenedores */
+  .card {
+    @apply bg-white border-gray-200 shadow-sm;
+  }
+
+  .card-header {
+    @apply bg-gray-50 border-b border-gray-200;
+  }
+
+  /* Estilos para modales y diálogos */
+  .modal-content {
+    @apply bg-white border-gray-200 shadow-xl;
+  }
+
+  .modal-header {
+    @apply bg-gray-50 border-b border-gray-200;
+  }
+
+  .modal-footer {
+    @apply bg-gray-50 border-t border-gray-200;
+  }
+
+  /* Estilos para menús desplegables */
+  .dropdown-menu {
+    @apply bg-white border border-gray-200 shadow-lg;
+  }
+
+  .dropdown-menu-item {
+    @apply hover:bg-gray-50;
+  }
+
+  /* Estilos para ventanas emergentes */
+  .popover {
+    @apply bg-white border border-gray-200 shadow-lg;
+  }
+
+  /* Estilos para ventanas de proceso */
+  .process-modal {
+    @apply bg-white border border-gray-200;
+  }
+
+  /* Estilos para ventanas de contacto de emergencia */
+  .emergency-contact-modal {
+    @apply bg-white border border-gray-200;
+  }
+
+  /* Estilos para ventanas de grabación de voz */
+  .voice-recording-modal {
+    @apply bg-white border border-gray-200;
   }
 }
 

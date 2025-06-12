@@ -7,18 +7,18 @@ export const themes = {
       contrast: '#ffffff'
     },
     secondary: {
-      main: '#7c3aed',
-      light: '#a78bfa',
-      dark: '#5b21b6',
-      contrast: '#ffffff'
+      main: '#f3f4f6',
+      light: '#ffffff',
+      dark: '#e5e7eb',
+      contrast: '#1f2937'
     },
     background: {
       default: '#ffffff',
-      paper: '#f3f4f6',
-      dark: '#e5e7eb'
+      paper: '#f9fafb',
+      dark: '#f3f4f6'
     },
     text: {
-      primary: '#111827',
+      primary: '#1f2937',
       secondary: '#4b5563',
       disabled: '#9ca3af'
     },
@@ -51,10 +51,10 @@ export const themes = {
       contrast: '#ffffff'
     },
     secondary: {
-      main: '#8b5cf6',
-      light: '#a78bfa',
-      dark: '#7c3aed',
-      contrast: '#ffffff'
+      main: '#1f2937',
+      light: '#374151',
+      dark: '#111827',
+      contrast: '#f9fafb'
     },
     background: {
       default: '#111827',
