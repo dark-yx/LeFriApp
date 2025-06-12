@@ -8,6 +8,26 @@ export interface Translations {
   profile: string;
   logout: string;
 
+  // Auth
+  signIn: string;
+  signUp: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
+  fullName: string;
+  createAccount: string;
+  alreadyHaveAccount: string;
+  dontHaveAccount: string;
+  continueWithGoogle: string;
+  orContinueWith: string;
+  termsOfService: string;
+  privacyPolicy: string;
+  byCreating: string;
+  and: string;
+  signingIn: string;
+  creatingAccount: string;
+  authenticating: string;
+
   // Dashboard
   welcomeTitle: string;
   welcomeSubtitle: string;
@@ -89,6 +109,26 @@ const translations: Record<string, Translations> = {
     profile: "Perfil",
     logout: "Cerrar Sesión",
 
+    // Auth
+    signIn: "Iniciar Sesión",
+    signUp: "Registrarse",
+    email: "Correo Electrónico",
+    password: "Contraseña",
+    confirmPassword: "Confirmar Contraseña",
+    fullName: "Nombre Completo",
+    createAccount: "Crear Cuenta",
+    alreadyHaveAccount: "¿Ya tienes una cuenta?",
+    dontHaveAccount: "¿No tienes una cuenta?",
+    continueWithGoogle: "Continuar con Google",
+    orContinueWith: "O continúa con",
+    termsOfService: "Términos de Servicio",
+    privacyPolicy: "Política de Privacidad",
+    byCreating: "Al continuar, aceptas nuestros",
+    and: "y",
+    signingIn: "Iniciando sesión...",
+    creatingAccount: "Creando cuenta...",
+    authenticating: "Autenticando...",
+
     // Dashboard
     welcomeTitle: "Bienvenido a LeFriAI",
     welcomeSubtitle: "Tu asistente legal inteligente",
@@ -168,6 +208,26 @@ const translations: Record<string, Translations> = {
     emergency: "Emergency",
     profile: "Profile",
     logout: "Logout",
+
+    // Auth
+    signIn: "Sign In",
+    signUp: "Sign Up",
+    email: "Email",
+    password: "Password",
+    confirmPassword: "Confirm Password",
+    fullName: "Full Name",
+    createAccount: "Create Account",
+    alreadyHaveAccount: "Already have an account?",
+    dontHaveAccount: "Don't have an account?",
+    continueWithGoogle: "Continue with Google",
+    orContinueWith: "Or continue with",
+    termsOfService: "Terms of Service",
+    privacyPolicy: "Privacy Policy",
+    byCreating: "By continuing, you agree to our",
+    and: "and",
+    signingIn: "Signing in...",
+    creatingAccount: "Creating account...",
+    authenticating: "Authenticating...",
 
     // Dashboard
     welcomeTitle: "Welcome to LeFriAI",
@@ -401,13 +461,13 @@ const translations: Record<string, Translations> = {
   }
 };
 
-// Hook to use translations
-export function useTranslations(language: string = 'es'): Translations {
-  return translations[language] || translations.es;
+// Hook to use translations - English as default
+export function useTranslations(language: string = 'en'): Translations {
+  return translations[language] || translations.en;
 }
 
-export function getTranslation(key: keyof Translations, language: string = 'es'): string {
-  const t = translations[language] || translations.es;
+export function getTranslation(key: keyof Translations, language: string = 'en'): string {
+  const t = translations[language] || translations.en;
   return t[key] || key;
 }
 

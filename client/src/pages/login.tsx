@@ -5,15 +5,20 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useAuth } from '@/hooks/use-auth';
 import { api } from '@/lib/api';
-import { Scale, Mail, Lock, User } from 'lucide-react';
+import { Scale, Mail, Lock, User, Globe } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { useTranslations } from '@/lib/i18n';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 export default function Login() {
   const [, setLocation] = useLocation();
   const { login, setLoading, isLoading } = useAuth();
   const { toast } = useToast();
+  const { language, setLanguage } = useLanguage();
+  const t = useTranslations(language);
   
   // Form states
   const [loginForm, setLoginForm] = useState({ email: '', password: '' });
