@@ -77,17 +77,20 @@
     animation: spin 1s linear infinite;
   }
 
-  /* Fondos sólidos para todos los componentes */
+  /* Solid backgrounds for all UI components */
   .popover-content,
   .dialog-content,
   .dropdown-menu-content,
   .select-content,
   .sheet-content,
   .tooltip-content,
-  .context-menu-content {
-    @apply bg-card border border-border shadow-lg !important;
+  .context-menu-content,
+  .command-content,
+  .accordion-content,
+  .tabs-content {
+    @apply bg-white border border-gray-200 shadow-lg !important;
     backdrop-filter: none !important;
-    background: hsl(var(--card)) !important;
+    background: white !important;
   }
 
   .dark .popover-content,
@@ -96,11 +99,25 @@
   .dark .select-content,
   .dark .sheet-content,
   .dark .tooltip-content,
-  .dark .context-menu-content {
+  .dark .context-menu-content,
+  .dark .command-content,
+  .dark .accordion-content,
+  .dark .tabs-content {
     background: hsl(var(--card)) !important;
   }
 
-  /* Fondos sólidos para overlays */
+  /* Solid backgrounds for form elements */
+  .input,
+  .textarea,
+  .select-trigger {
+    @apply bg-white border-gray-300 !important;
+  }
+
+  .card {
+    @apply bg-white border-gray-200 !important;
+  }
+
+  /* Solid backgrounds for overlays */
   .dialog-overlay,
   .sheet-overlay {
     background: rgba(0, 0, 0, 0.8) !important;
@@ -109,6 +126,15 @@
   .dark .dialog-overlay,
   .dark .sheet-overlay {
     background: rgba(0, 0, 0, 0.9) !important;
+  }
+
+  /* Button solid backgrounds */
+  .button {
+    @apply bg-white border-gray-200 hover:bg-gray-50 !important;
+  }
+
+  .button[data-variant="default"] {
+    @apply bg-blue-600 hover:bg-blue-700 text-white border-blue-600 !important;
   }
 }
 
