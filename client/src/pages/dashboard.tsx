@@ -33,31 +33,34 @@ export default function Dashboard() {
 
   const modeCards = [
     {
-      title: 'Consultation Mode',
-      description: 'Ask legal questions and get contextualized answers by country using advanced AI.',
+      title: t.modeConsultation,
+      description: t.modeConsultationDesc,
       icon: MessageSquare,
       iconBg: 'bg-blue-100',
       iconColor: 'text-blue-500',
       buttonColor: 'text-blue-500',
       onClick: () => setLocation('/consulta'),
+      buttonText: t.startConsultationButton
     },
     {
-      title: 'Process Mode',
-      description: 'Step-by-step guidance for common legal processes like divorce, contracts and lawsuits.',
+      title: t.modeProcess,
+      description: t.modeProcessDesc,
       icon: FileText,
       iconBg: 'bg-orange-100',
       iconColor: 'text-orange-600',
       buttonColor: 'text-orange-600',
       onClick: () => setLocation('/processes'),
+      buttonText: t.viewProcessesButton
     },
     {
-      title: 'Emergency Mode',
-      description: 'Automatic alert system via WhatsApp to your emergency contacts.',
+      title: t.modeEmergency,
+      description: t.modeEmergencyDesc,
       icon: AlertTriangle,
       iconBg: 'bg-red-100',
       iconColor: 'text-red-500',
       buttonColor: 'text-red-500',
       onClick: () => setLocation('/emergencia'),
+      buttonText: t.setupAlertsButton
     },
   ];
 
@@ -70,10 +73,10 @@ export default function Dashboard() {
           {/* Welcome Section */}
           <div className="bg-gradient-to-r from-blue-500 to-blue-600 rounded-2xl p-8 text-white">
             <h2 className="text-3xl font-bold mb-2">
-              Welcome{user?.name ? `, ${user.name.split(' ')[0]}` : ''}!
+              {t.welcome}{user?.name ? `, ${user.name.split(' ')[0]}` : ''}!
             </h2>
             <p className="text-blue-100 text-lg">
-              Your intelligent legal assistant is ready to help with consultations, processes and emergencies.
+              {t.welcomeSubtitle}
             </p>
           </div>
 
@@ -96,11 +99,7 @@ export default function Dashboard() {
                     {card.description}
                   </p>
                   <div className={`flex items-center ${card.buttonColor} text-sm font-medium`}>
-                    <span>
-                      {card.title === 'Consultation Mode' && 'Start consultation'}
-                      {card.title === 'Process Mode' && 'View processes'}
-                      {card.title === 'Emergency Mode' && 'Setup alerts'}
-                    </span>
+                    <span>{card.buttonText}</span>
                     <ArrowRight className="ml-2 w-4 h-4" />
                   </div>
                 </CardContent>
@@ -109,69 +108,75 @@ export default function Dashboard() {
           </div>
 
           {/* Recent Activity */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-xl">Actividad Reciente</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-3">
-                {recentConsultations?.slice(0, 3).map((consultation: any, index: number) => (
-                  <div key={consultation.id || `consultation-${index}`} className="flex items-center space-x-3 p-3 bg-neutral-50 rounded-lg">
-                    <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
-                      <MessageSquare className="w-4 h-4 text-blue-500" />
-                    </div>
-                    <div className="flex-1">
-                      <p className="text-sm font-medium text-neutral-900 truncate">
-                        {consultation.query}
-                      </p>
-                      <p className="text-xs text-neutral-500">
-                        {new Date(consultation.createdAt).toLocaleDateString('es-ES', {
-                          day: 'numeric',
-                          month: 'long',
-                          hour: '2-digit',
-                          minute: '2-digit'
-                        })}
-                      </p>
-                    </div>
-                  </div>
-                )) || (
-                  <div className="text-center py-8 text-neutral-500">
-                    <MessageSquare className="w-8 h-8 mx-auto mb-2 opacity-50" />
-                    <p className="text-sm">No hay consultas recientes</p>
-                    <Button 
-                      variant="link" 
-                      className="text-blue-500 mt-2"
-                      onClick={() => setLocation('/consulta')}
-                    >
-                      Realizar primera consulta
-                    </Button>
-                  </div>
-                )}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* Recent Consultations */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center space-x-2">
+                  <MessageSquare className="w-5 h-5" />
+                  <span>{t.consultations}</span>
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-3">
+                  {recentConsultations?.length > 0 ? (
+                    recentConsultations.slice(0, 3).map((consultation: any, index: number) => (
+                      <div key={consultation.id || `consultation-${index}`} className="flex items-center space-x-3 p-3 bg-neutral-50 rounded-lg">
+                        <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+                          <MessageSquare className="w-4 h-4 text-blue-600" />
+                        </div>
+                        <div className="flex-1">
+                          <p className="text-sm font-medium text-neutral-900 line-clamp-1">
+                            {consultation.query}
+                          </p>
+                          <p className="text-xs text-neutral-500">
+                            {new Date(consultation.createdAt).toLocaleDateString()}
+                          </p>
+                        </div>
+                      </div>
+                    ))
+                  ) : (
+                    <p className="text-sm text-neutral-500">{t.noConsultations}</p>
+                  )}
+                </div>
+              </CardContent>
+            </Card>
 
-                {activeProcesses?.length > 0 && (
-                  <>
-                    {activeProcesses.slice(0, 2).map((process: any, index: number) => (
+            {/* Active Processes */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center space-x-2">
+                  <FileText className="w-5 h-5" />
+                  <span>{t.activeProcesses}</span>
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-3">
+                  {activeProcesses?.length > 0 ? (
+                    activeProcesses.slice(0, 2).map((process: any, index: number) => (
                       <div key={process.id || `process-${index}`} className="flex items-center space-x-3 p-3 bg-neutral-50 rounded-lg">
                         <div className="w-8 h-8 bg-orange-100 rounded-lg flex items-center justify-center">
                           <FileText className="w-4 h-4 text-orange-600" />
                         </div>
                         <div className="flex-1">
                           <p className="text-sm font-medium text-neutral-900">
-                            {process.processType === 'divorcio' && 'Proceso de Divorcio'}
-                            {process.processType === 'contrato' && 'Redacción de Contrato'}
-                            {process.processType === 'laboral' && 'Demanda Laboral'}
+                            {process.processType === 'divorcio' && t.processDivorce}
+                            {process.processType === 'contrato' && t.processContract}
+                            {process.processType === 'laboral' && t.processLabor}
                           </p>
                           <p className="text-xs text-neutral-500">
-                            Paso {process.currentStep + 1} - {process.status === 'in_progress' ? 'En progreso' : process.status}
+                            {t.step} {process.currentStep + 1} - {process.status === 'in_progress' ? t.inProgress : process.status}
                           </p>
                         </div>
                       </div>
-                    ))}
-                  </>
-                )}
-              </div>
-            </CardContent>
-          </Card>
+                    ))
+                  ) : (
+                    <p className="text-sm text-neutral-500">{t.noProcesses}</p>
+                  )}
+                </div>
+              </CardContent>
+            </Card>
+          </div>
         </div>
       </main>
     </div>

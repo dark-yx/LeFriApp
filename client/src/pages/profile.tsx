@@ -14,6 +14,8 @@ import { useLocation } from 'wouter';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
+import { useLanguage } from '@/contexts/LanguageContext';
+import { useTranslations } from '@/lib/i18n';
 
 const profileSchema = z.object({
   name: z.string().min(1, 'Name is required'),
@@ -29,6 +31,8 @@ export default function Profile() {
   const [, setLocation] = useLocation();
   const { user, updateUser } = useAuth();
   const queryClient = useQueryClient();
+  const { language } = useLanguage();
+  const t = useTranslations(language);
 
   const { data: consultations } = useQuery({
     queryKey: ['/api/consultations'],
@@ -122,17 +126,17 @@ export default function Profile() {
                 <CardHeader>
                   <CardTitle className="flex items-center space-x-2">
                     <User className="w-5 h-5" />
-                    <span>Profile Information</span>
+                    <span>{t.personalInformation}</span>
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
                   <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div>
-                        <Label htmlFor="name">Full Name</Label>
+                        <Label htmlFor="name">{t.fullName}</Label>
                         <Input
                           id="name"
-                          placeholder="John Doe"
+                          placeholder={t.fullName}
                           {...register('name')}
                         />
                         {errors.name && (
@@ -141,11 +145,11 @@ export default function Profile() {
                       </div>
                       
                       <div>
-                        <Label htmlFor="email">Email</Label>
+                        <Label htmlFor="email">{t.email}</Label>
                         <Input
                           id="email"
                           type="email"
-                          placeholder="john@example.com"
+                          placeholder={t.email}
                           {...register('email')}
                         />
                         {errors.email && (
@@ -154,11 +158,11 @@ export default function Profile() {
                       </div>
                       
                       <div>
-                        <Label htmlFor="phone">Phone Number</Label>
+                        <Label htmlFor="phone">{t.phone}</Label>
                         <Input
                           id="phone"
                           type="tel"
-                          placeholder="+593 99 123 4567"
+                          placeholder={t.phone}
                           {...register('phone')}
                         />
                         {errors.phone && (
@@ -167,10 +171,10 @@ export default function Profile() {
                       </div>
                       
                       <div>
-                        <Label htmlFor="country">Country</Label>
+                        <Label htmlFor="country">{t.country}</Label>
                         <Select onValueChange={(value) => setValue('country', value)}>
                           <SelectTrigger>
-                            <SelectValue placeholder="Select country" />
+                            <SelectValue placeholder={t.country} />
                           </SelectTrigger>
                           <SelectContent>
                             {countries.map((country) => (
@@ -186,10 +190,10 @@ export default function Profile() {
                       </div>
                       
                       <div>
-                        <Label htmlFor="language">Language</Label>
+                        <Label htmlFor="language">{t.language}</Label>
                         <Select onValueChange={(value) => setValue('language', value)}>
                           <SelectTrigger>
-                            <SelectValue placeholder="Select language" />
+                            <SelectValue placeholder={t.language} />
                           </SelectTrigger>
                           <SelectContent>
                             {languages.map((language) => (
@@ -211,7 +215,7 @@ export default function Profile() {
                         className="bg-blue-500 hover:bg-blue-600"
                         disabled={!isDirty || updateProfileMutation.isPending}
                       >
-                        {updateProfileMutation.isPending ? 'Saving...' : 'Save Changes'}
+                        {updateProfileMutation.isPending ? t.saving : t.saveChanges}
                       </Button>
                     </div>
                   </form>
@@ -225,24 +229,24 @@ export default function Profile() {
                 <CardHeader>
                   <CardTitle className="flex items-center space-x-2">
                     <BarChart3 className="w-5 h-5" />
-                    <span>Usage Statistics</span>
+                    <span>{t.usageStatistics}</span>
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div className="flex items-center justify-between">
-                    <span className="text-sm text-neutral-600">Consultations completed</span>
+                    <span className="text-sm text-neutral-600">{t.consultationsCompleted}</span>
                     <span className="text-lg font-bold text-blue-500">
                       {consultations?.length || 0}
                     </span>
                   </div>
                   <div className="flex items-center justify-between">
-                    <span className="text-sm text-neutral-600">Processes started</span>
+                    <span className="text-sm text-neutral-600">{t.processesStarted}</span>
                     <span className="text-lg font-bold text-orange-600">
                       {processes?.length || 0}
                     </span>
                   </div>
                   <div className="flex items-center justify-between">
-                    <span className="text-sm text-neutral-600">Total time</span>
+                    <span className="text-sm text-neutral-600">{t.totalTime}</span>
                     <span className="text-lg font-bold text-neutral-900">
                       {totalHours.toFixed(1)}h
                     </span>

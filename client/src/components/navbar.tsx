@@ -8,12 +8,15 @@ import { useAuth } from '@/hooks/use-auth';
 import { useTheme } from '@/components/theme-provider';
 import { Scale, ChevronDown, User, Settings, LogOut, Moon, Sun, Globe } from 'lucide-react';
 import { useQueryClient } from '@tanstack/react-query';
+import { useLanguage } from '@/contexts/LanguageContext';
+import { useTranslations } from '@/lib/i18n';
 
 export function Navbar() {
   const [location, setLocation] = useLocation();
   const { user, logout, updateUser } = useAuth();
   const { theme, setTheme } = useTheme();
-  const [language, setLanguage] = useState(user?.language || 'en');
+  const { language, setLanguage } = useLanguage();
+  const t = useTranslations(language);
   const queryClient = useQueryClient();
 
   const handleLanguageChange = async (newLanguage: string) => {
@@ -21,9 +24,7 @@ export function Navbar() {
       setLanguage(newLanguage);
       await updateUser({ language: newLanguage });
       localStorage.setItem('language', newLanguage);
-      // Actualizar el contexto de idioma sin recargar
       document.documentElement.lang = newLanguage;
-      // Invalidar queries relacionadas con el idioma
       queryClient.invalidateQueries({ queryKey: ['translations'] });
     } catch (error) {
       console.error('Error al cambiar el idioma:', error);
@@ -92,14 +93,14 @@ export function Navbar() {
             {/* User Menu */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="flex items-center space-x-2 bg-neutral-100 hover:bg-neutral-200">
-                  <Avatar className="w-6 h-6">
-                    <AvatarFallback className="bg-blue-500 text-white text-xs">
-                      {user ? getInitials(user.name) : 'U'}
+                <Button variant="ghost" className="flex items-center space-x-2">
+                  <Avatar className="w-8 h-8">
+                    <AvatarFallback className="bg-blue-500 text-white text-sm">
+                      {getInitials(user?.name || '')}
                     </AvatarFallback>
                   </Avatar>
                   <span className="text-sm font-medium text-neutral-700">
-                    {user ? getFirstName(user.name) : 'Perfil'}
+                    {getFirstName(user?.name || '')}
                   </span>
                   <ChevronDown className="w-4 h-4 text-neutral-500" />
                 </Button>
@@ -107,16 +108,16 @@ export function Navbar() {
               <DropdownMenuContent align="end" className="w-48">
                 <DropdownMenuItem onClick={() => handleNavigation('/profile')}>
                   <User className="w-4 h-4 mr-2" />
-                  Mi Perfil
+                  {t.profile}
                 </DropdownMenuItem>
-                <DropdownMenuItem>
+                <DropdownMenuItem onClick={() => handleNavigation('/settings')}>
                   <Settings className="w-4 h-4 mr-2" />
-                  Configuración
+                  {t.settings}
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={handleLogout} className="text-red-600">
                   <LogOut className="w-4 h-4 mr-2" />
-                  Cerrar Sesión
+                  {t.logout}
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>

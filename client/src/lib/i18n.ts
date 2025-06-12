@@ -1,3 +1,5 @@
+import { useState, useEffect } from 'react';
+
 // Comprehensive translation system for LeFriAI - English first
 export const translations = {
   en: {
@@ -33,7 +35,7 @@ export const translations = {
 
     // Dashboard
     welcome: "Welcome to LeFriAI",
-    welcomeSubtitle: "Your intelligent legal assistant",
+    welcomeSubtitle: "Your intelligent legal assistant is ready to help",
     recentActivity: "Recent Activity",
     quickActions: "Quick Actions",
     startConsultation: "Start Consultation",
@@ -42,6 +44,15 @@ export const translations = {
     noRecentActivity: "No recent activity",
     consultations: "Consultations",
     activeProcesses: "Active Processes",
+    modeConsultation: "Consultation Mode",
+    modeProcess: "Process Mode",
+    modeEmergency: "Emergency Mode",
+    modeConsultationDesc: "Ask legal questions and get contextualized answers by country using advanced AI.",
+    modeProcessDesc: "Step-by-step guidance for common legal processes like divorce, contracts and lawsuits.",
+    modeEmergencyDesc: "Automatic alert system via WhatsApp to your emergency contacts.",
+    startConsultationButton: "Start consultation",
+    viewProcessesButton: "View processes",
+    setupAlertsButton: "Setup alerts",
 
     // Consultation
     askQuestion: "Ask your legal question",
@@ -55,6 +66,8 @@ export const translations = {
     confidence: "Confidence",
     sources: "Sources",
     relevance: "relevance",
+    quickQuestions: "Quick Questions",
+    typeQuestion: "Type your legal question...",
 
     // Processes
     myProcesses: "My Processes",
@@ -69,9 +82,14 @@ export const translations = {
     totalSteps: "Total Steps",
     startNewProcess: "Start New Process",
     continueProcess: "Continue Process",
+    processDivorce: "Divorce Process",
+    processContract: "Contract Drafting",
+    processLabor: "Labor Lawsuit",
+    step: "Step",
+    inProgress: "In progress",
 
     // Emergency
-    emergencyTitle: "Emergency Assistance",
+    emergencyTitle: "Emergency System",
     emergencyDescription: "In case of legal emergency, press the button to alert your contacts",
     sendAlert: "Send Alert",
     emergencyContacts: "Emergency Contacts",
@@ -83,6 +101,14 @@ export const translations = {
     emergencyActivated: "Emergency Activated",
     location: "Location",
     contacts: "Contacts",
+    notifyViaWhatsApp: "Notify via WhatsApp",
+    relationshipMother: "Mother",
+    relationshipFather: "Father",
+    relationshipSibling: "Sibling",
+    relationshipPartner: "Partner",
+    relationshipLawyer: "Lawyer",
+    relationshipFriend: "Friend",
+    relationshipOther: "Other",
 
     // Profile & Account
     personalInformation: "Personal Information",
@@ -100,6 +126,11 @@ export const translations = {
     editProfile: "Edit Profile",
     saveChanges: "Save Changes",
     personalInfo: "Personal Information",
+    usageStatistics: "Usage Statistics",
+    consultationsCompleted: "Consultations completed",
+    processesStarted: "Processes started",
+    totalTime: "Total time",
+    saving: "Saving...",
 
     // Common
     loading: "Loading...",
@@ -211,7 +242,7 @@ export const translations = {
 
     // Dashboard
     welcome: "Bienvenido a LeFriAI",
-    welcomeSubtitle: "Tu asistente legal inteligente",
+    welcomeSubtitle: "Tu asistente legal inteligente está listo para ayudarte",
     recentActivity: "Actividad Reciente",
     quickActions: "Acciones Rápidas",
     startConsultation: "Iniciar Consulta",
@@ -220,6 +251,15 @@ export const translations = {
     noRecentActivity: "Sin actividad reciente",
     consultations: "Consultas",
     activeProcesses: "Procesos Activos",
+    modeConsultation: "Modo Consulta",
+    modeProcess: "Modo Proceso",
+    modeEmergency: "Modo Emergencia",
+    modeConsultationDesc: "Realiza consultas legales y obtén respuestas contextualizadas por país usando IA avanzada.",
+    modeProcessDesc: "Guía paso a paso para procesos legales comunes como divorcios, contratos y demandas.",
+    modeEmergencyDesc: "Sistema de alertas automáticas vía WhatsApp a tus contactos de emergencia.",
+    startConsultationButton: "Iniciar consulta",
+    viewProcessesButton: "Ver procesos",
+    setupAlertsButton: "Configurar alertas",
 
     // Consultation
     askQuestion: "Haz tu pregunta legal",
@@ -233,6 +273,8 @@ export const translations = {
     confidence: "Confianza",
     sources: "Fuentes",
     relevance: "relevancia",
+    quickQuestions: "Preguntas Frecuentes",
+    typeQuestion: "Escribe tu consulta legal...",
 
     // Processes
     myProcesses: "Mis Procesos",
@@ -247,9 +289,14 @@ export const translations = {
     totalSteps: "Pasos Totales",
     startNewProcess: "Iniciar Nuevo Proceso",
     continueProcess: "Continuar Proceso",
+    processDivorce: "Proceso de Divorcio",
+    processContract: "Redacción de Contrato",
+    processLabor: "Demanda Laboral",
+    step: "Paso",
+    inProgress: "En progreso",
 
     // Emergency
-    emergencyTitle: "Asistencia de Emergencia",
+    emergencyTitle: "Sistema de Emergencia",
     emergencyDescription: "En caso de emergencia legal, presiona el botón para alertar a tus contactos",
     sendAlert: "Enviar Alerta",
     emergencyContacts: "Contactos de Emergencia",
@@ -261,6 +308,14 @@ export const translations = {
     emergencyActivated: "Emergencia Activada",
     location: "Ubicación",
     contacts: "Contactos",
+    notifyViaWhatsApp: "Notificar por WhatsApp",
+    relationshipMother: "Madre",
+    relationshipFather: "Padre",
+    relationshipSibling: "Hermano/a",
+    relationshipPartner: "Pareja",
+    relationshipLawyer: "Abogado/a",
+    relationshipFriend: "Amigo/a",
+    relationshipOther: "Otro",
 
     // Profile & Account
     personalInformation: "Información Personal",
@@ -278,6 +333,11 @@ export const translations = {
     editProfile: "Editar Perfil",
     saveChanges: "Guardar Cambios",
     personalInfo: "Información Personal",
+    usageStatistics: "Estadísticas de Uso",
+    consultationsCompleted: "Consultas completadas",
+    processesStarted: "Procesos iniciados",
+    totalTime: "Tiempo total",
+    saving: "Guardando...",
 
     // Common
     loading: "Cargando...",
@@ -362,7 +422,24 @@ export type TranslationKey = keyof typeof translations.en;
 
 // Hook to use translations - English as default
 export function useTranslations(language: string = 'en') {
-  return translations[language as Language] || translations.en;
+  const [currentTranslations, setCurrentTranslations] = useState(translations[language as Language] || translations.en);
+
+  useEffect(() => {
+    setCurrentTranslations(translations[language as Language] || translations.en);
+  }, [language]);
+
+  useEffect(() => {
+    const handleLanguageChange = (event: CustomEvent) => {
+      setCurrentTranslations(translations[event.detail.language as Language] || translations.en);
+    };
+
+    window.addEventListener('languageChanged', handleLanguageChange as EventListener);
+    return () => {
+      window.removeEventListener('languageChanged', handleLanguageChange as EventListener);
+    };
+  }, []);
+
+  return currentTranslations;
 }
 
 export function getTranslation(key: TranslationKey, language: string = 'en'): string {

@@ -20,6 +20,9 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   useEffect(() => {
     localStorage.setItem('language', language);
     document.documentElement.lang = language;
+    // Forzar re-render de componentes que usan traducciones
+    const event = new CustomEvent('languageChanged', { detail: { language } });
+    window.dispatchEvent(event);
   }, [language]);
 
   const t = useTranslations(language);

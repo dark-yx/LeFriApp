@@ -106,12 +106,10 @@ function App() {
     <ThemeProvider defaultTheme="light" storageKey="replit-legal-theme">
       <QueryClientProvider client={queryClient}>
         <LanguageProvider>
-          <TranslationProvider>
-            <TooltipProvider>
-              <Toaster />
-              <Router />
-            </TooltipProvider>
-          </TranslationProvider>
+          <TooltipProvider>
+            <Toaster />
+            <Router />
+          </TooltipProvider>
         </LanguageProvider>
       </QueryClientProvider>
     </ThemeProvider>
