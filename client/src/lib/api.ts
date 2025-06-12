@@ -2,8 +2,18 @@ import { apiRequest } from './queryClient';
 
 export const api = {
   // Auth
-  googleAuth: (data: { email: string; name: string; googleId: string }) =>
+  googleAuth: (data: { code: string }) =>
     apiRequest('POST', '/api/auth/google', data),
+  
+  getGoogleAuthUrl: () => apiRequest('GET', '/api/auth/google/url'),
+  
+  login: (data: { email: string; password: string }) =>
+    apiRequest('POST', '/api/auth/login', data),
+  
+  register: (data: { email: string; password: string; name: string; country?: string; language?: string }) =>
+    apiRequest('POST', '/api/auth/register', data),
+  
+  logout: () => apiRequest('POST', '/api/auth/logout'),
   
   getMe: () => apiRequest('GET', '/api/auth/me'),
 

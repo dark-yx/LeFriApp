@@ -176,6 +176,50 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Google OAuth callback handler
+  app.get("/api/auth/google/callback", async (req, res) => {
+    try {
+      const { code } = req.query;
+      
+      if (!code) {
+        return res.redirect('/login?error=no_code');
+      }
+
+      // Get user info from Google
+      const googleUser = await googleAuthService.getUserInfo(code as string);
+      
+      let user = await storage.getUserByGoogleId(googleUser.id);
+      if (!user) {
+        user = await storage.getUserByEmail(googleUser.email);
+        if (!user) {
+          user = await storage.createUser({
+            email: googleUser.email,
+            name: googleUser.name,
+            googleId: googleUser.id,
+            language: "es",
+            country: "EC"
+          });
+        } else {
+          // Update existing user with Google ID
+          user = await storage.updateUser(user.id, { googleId: googleUser.id });
+        }
+      }
+      
+      // Set session
+      req.session.userId = user.id;
+      req.session.save((err) => {
+        if (err) {
+          console.error('Session save error:', err);
+          return res.redirect('/login?error=session');
+        }
+        res.redirect('/dashboard');
+      });
+    } catch (error) {
+      console.error('Google OAuth callback error:', error);
+      res.redirect('/login?error=oauth_failed');
+    }
+  });
+
   // Logout endpoint
   app.post("/api/auth/logout", (req: any, res) => {
     req.session.destroy((err) => {

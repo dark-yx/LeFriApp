@@ -1,30 +1,37 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import type { User } from '@shared/schema';
+import type { UserDocument } from '@shared/schema';
+import { api } from '@/lib/api';
 
 interface AuthState {
-  user: User | null;
-  token: string | null;
+  user: UserDocument | null;
   isLoading: boolean;
-  login: (user: User, token: string) => void;
-  logout: () => void;
+  isInitialized: boolean;
+  login: (user: UserDocument, token?: string) => void;
+  logout: () => Promise<void>;
   setLoading: (loading: boolean) => void;
-  updateUser: (updates: Partial<User>) => void;
+  updateUser: (updates: Partial<UserDocument>) => void;
+  initializeAuth: () => Promise<void>;
 }
 
 export const useAuth = create<AuthState>()(
   persist(
     (set, get) => ({
       user: null,
-      token: null,
       isLoading: false,
+      isInitialized: false,
       
       login: (user, token) => {
-        set({ user, token, isLoading: false });
+        set({ user, isLoading: false });
       },
       
-      logout: () => {
-        set({ user: null, token: null, isLoading: false });
+      logout: async () => {
+        try {
+          await api.logout();
+        } catch (error) {
+          console.error('Logout error:', error);
+        }
+        set({ user: null, isLoading: false });
       },
       
       setLoading: (loading) => {
@@ -36,11 +43,29 @@ export const useAuth = create<AuthState>()(
         if (user) {
           set({ user: { ...user, ...updates } });
         }
+      },
+
+      initializeAuth: async () => {
+        if (get().isInitialized) return;
+        
+        set({ isLoading: true });
+        try {
+          const response = await api.getMe();
+          const userData = await response.json();
+          
+          if (response.ok) {
+            set({ user: userData, isLoading: false, isInitialized: true });
+          } else {
+            set({ user: null, isLoading: false, isInitialized: true });
+          }
+        } catch (error) {
+          set({ user: null, isLoading: false, isInitialized: true });
+        }
       }
     }),
     {
       name: 'lefri-auth',
-      partialize: (state) => ({ user: state.user, token: state.token }),
+      partialize: (state) => ({ user: state.user }),
     }
   )
 );
