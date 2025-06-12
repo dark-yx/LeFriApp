@@ -2,14 +2,17 @@ import { useQuery } from '@tanstack/react-query';
 import { useLocation } from 'wouter';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Navbar } from '@/components/navbar';
 import { api } from '@/lib/api';
 import { useAuth } from '@/hooks/use-auth';
+import { useLanguage } from '@/contexts/LanguageContext';
+import { useTranslations } from '@/lib/i18n';
 import { MessageSquare, FileText, AlertTriangle, Clock, ArrowRight } from 'lucide-react';
 
 export default function Dashboard() {
   const [, setLocation] = useLocation();
   const { user } = useAuth();
+  const { language } = useLanguage();
+  const t = useTranslations(language);
 
   const { data: recentConsultations } = useQuery({
     queryKey: ['/api/consultations'],

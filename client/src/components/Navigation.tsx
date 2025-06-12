@@ -32,51 +32,18 @@ export function Navigation() {
           <span className="text-xl font-bold text-gray-900">LeFriAI</span>
         </Link>
 
-        {/* Navigation Links */}
-        <div className="hidden md:flex items-center gap-6">
-          <Link href="/dashboard">
-            <Button 
-              variant={location === '/dashboard' ? 'default' : 'ghost'}
-              className="bg-white hover:bg-gray-50 text-gray-700 border border-gray-200"
-            >
-              {t.dashboard}
-            </Button>
-          </Link>
-          <Link href="/consulta">
-            <Button 
-              variant={location === '/consulta' ? 'default' : 'ghost'}
-              className="bg-white hover:bg-gray-50 text-gray-700 border border-gray-200"
-            >
-              {t.consultation}
-            </Button>
-          </Link>
-          <Link href="/processes">
-            <Button 
-              variant={location === '/processes' ? 'default' : 'ghost'}
-              className="bg-white hover:bg-gray-50 text-gray-700 border border-gray-200"
-            >
-              {t.processes}
-            </Button>
-          </Link>
-          <Link href="/emergencia">
-            <Button 
-              variant={location === '/emergencia' ? 'default' : 'ghost'}
-              className="bg-white hover:bg-gray-50 text-gray-700 border border-gray-200"
-            >
-              {t.emergency}
-            </Button>
-          </Link>
-        </div>
+        {/* Spacer for center alignment */}
+        <div className="flex-1"></div>
 
         {/* Right Side Controls */}
         <div className="flex items-center gap-4">
           {/* Language Selector */}
           <Select value={language} onValueChange={setLanguage}>
-            <SelectTrigger className="w-32 bg-white border-gray-200">
+            <SelectTrigger className="w-32" style={{ backgroundColor: '#f0f0f0', borderColor: '#d1d5db' }}>
               <Globe className="h-4 w-4 mr-2" />
               <SelectValue />
             </SelectTrigger>
-            <SelectContent className="bg-white border-gray-200">
+            <SelectContent style={{ backgroundColor: '#f0f0f0', borderColor: '#d1d5db' }}>
               <SelectItem value="en">English</SelectItem>
               <SelectItem value="es">Español</SelectItem>
             </SelectContent>
@@ -90,7 +57,7 @@ export function Navigation() {
                 {user.name || user.email}
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent className="bg-white border-gray-200" align="end">
+            <DropdownMenuContent style={{ backgroundColor: '#f5f5f5', borderColor: '#d1d5db' }} align="end">
               <DropdownMenuItem asChild>
                 <Link href="/profile" className="flex items-center cursor-pointer">
                   <Settings className="h-4 w-4 mr-2" />
@@ -106,45 +73,7 @@ export function Navigation() {
         </div>
       </div>
 
-      {/* Mobile Navigation */}
-      <div className="md:hidden mt-3 flex gap-2 overflow-x-auto">
-        <Link href="/dashboard">
-          <Button 
-            variant={location === '/dashboard' ? 'default' : 'ghost'}
-            size="sm"
-            className="bg-white hover:bg-gray-50 text-gray-700 border border-gray-200 whitespace-nowrap"
-          >
-            {t.dashboard}
-          </Button>
-        </Link>
-        <Link href="/consulta">
-          <Button 
-            variant={location === '/consulta' ? 'default' : 'ghost'}
-            size="sm"
-            className="bg-white hover:bg-gray-50 text-gray-700 border border-gray-200 whitespace-nowrap"
-          >
-            {t.consultation}
-          </Button>
-        </Link>
-        <Link href="/processes">
-          <Button 
-            variant={location === '/processes' ? 'default' : 'ghost'}
-            size="sm"
-            className="bg-white hover:bg-gray-50 text-gray-700 border border-gray-200 whitespace-nowrap"
-          >
-            {t.processes}
-          </Button>
-        </Link>
-        <Link href="/emergencia">
-          <Button 
-            variant={location === '/emergencia' ? 'default' : 'ghost'}
-            size="sm"
-            className="bg-white hover:bg-gray-50 text-gray-700 border border-gray-200 whitespace-nowrap"
-          >
-            {t.emergency}
-          </Button>
-        </Link>
-      </div>
+
     </nav>
   );
 }

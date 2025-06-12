@@ -88,9 +88,28 @@
   .command-content,
   .accordion-content,
   .tabs-content {
-    @apply bg-white border border-gray-200 shadow-lg !important;
+    background: #f0f0f0 !important;
+    border: 1px solid #d1d5db !important;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1) !important;
     backdrop-filter: none !important;
-    background: white !important;
+  }
+
+  /* Specific backgrounds for different components */
+  .select-content {
+    background: #f0f0f0 !important;
+  }
+
+  .dropdown-menu-content {
+    background: #f5f5f5 !important;
+  }
+
+  .dialog-content {
+    background: #ffffff !important;
+  }
+
+  /* Voice note window */
+  .voice-note-window {
+    background: #f8f8f8 !important;
   }
 
   .dark .popover-content,
