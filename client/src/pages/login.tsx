@@ -57,7 +57,7 @@ export default function Login() {
         throw new Error(data.error || 'Login failed');
       }
       
-      login(data.user, 'session-token');
+      login(data.user);
       setLocation('/dashboard');
       
       toast({
@@ -114,7 +114,7 @@ export default function Login() {
         throw new Error(data.error || 'Registration failed');
       }
       
-      login(data.user, 'session-token');
+      login(data.user);
       setLocation('/dashboard');
       
       toast({

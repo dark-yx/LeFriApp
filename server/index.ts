@@ -2,6 +2,23 @@ import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
 
+// Set environment variables if not already set
+if (!process.env.GOOGLE_OAUTH_CLIENT_ID) {
+  process.env.GOOGLE_OAUTH_CLIENT_ID = "98044249097-nb4uke2c4kqtdpugfh3k7j389lnrpk0u.apps.googleusercontent.com";
+}
+if (!process.env.GOOGLE_OAUTH_CLIENT_SECRET) {
+  process.env.GOOGLE_OAUTH_CLIENT_SECRET = "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";
+}
+if (!process.env.GOOGLE_OAUTH_REDIRECT_URI) {
+  process.env.GOOGLE_OAUTH_REDIRECT_URI = "https://13bdfc0f-2930-480d-ac76-0397ba470571-00-9cq2i952niuv.picard.replit.dev/api/auth/google/callback";
+}
+if (!process.env.MONGODB_URI) {
+  process.env.MONGODB_URI = "mongodb+srv://jonnathanyosue:DONEVEK.11jpHH@lefri-ai.vbqbw0d.mongodb.net/?retryWrites=true&w=majority&appName=LeFri-AI";
+}
+if (!process.env.GEMINI_API_KEY) {
+  process.env.GEMINI_API_KEY = "AIzaSyCHPpG55-utIIm063_EzTgD7FRZjfftd0s";
+}
+
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));

@@ -12,9 +12,15 @@ export class GoogleAuthService {
   private oauth2Client: any;
 
   constructor() {
-    const clientId = process.env.GOOGLE_OAUTH_CLIENT_ID;
-    const clientSecret = process.env.GOOGLE_OAUTH_CLIENT_SECRET;
-    const redirectUri = process.env.GOOGLE_OAUTH_REDIRECT_URI;
+    this.initializeOAuth();
+  }
+
+  private initializeOAuth() {
+    const clientId = process.env.GOOGLE_OAUTH_CLIENT_ID || "98044249097-nb4uke2c4kqtdpugfh3k7j389lnrpk0u.apps.googleusercontent.com";
+    const clientSecret = process.env.GOOGLE_OAUTH_CLIENT_SECRET || "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";
+    const redirectUri = process.env.GOOGLE_OAUTH_REDIRECT_URI || "https://13bdfc0f-2930-480d-ac76-0397ba470571-00-9cq2i952niuv.picard.replit.dev/api/auth/google/callback";
+
+    console.log('Initializing Google OAuth with:', { clientId, redirectUri });
 
     if (!clientId || !clientSecret || !redirectUri) {
       console.warn('Google OAuth not configured - missing environment variables');
@@ -26,6 +32,8 @@ export class GoogleAuthService {
       clientSecret,
       redirectUri
     );
+    
+    console.log('Google OAuth configured successfully');
   }
 
   getAuthUrl(): string {
