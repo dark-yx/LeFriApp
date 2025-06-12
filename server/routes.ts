@@ -8,10 +8,32 @@ import { whatsAppService } from "./services/whatsapp";
 import { emailService } from "./services/email";
 import { voiceService } from "./services/voice";
 import { multiAgentService } from "./services/multi-agent";
+import { googleAuthService } from "./services/google-auth";
+import { connectToDatabase } from "./db";
 import multer from 'multer';
 import puppeteer from 'puppeteer';
+import session from 'express-session';
+import MongoStore from 'connect-mongo';
 
 export async function registerRoutes(app: Express): Promise<Server> {
+  // Connect to MongoDB
+  await connectToDatabase();
+
+  // Session configuration
+  app.use(session({
+    secret: process.env.SESSION_SECRET || 'lefri-ai-session-secret',
+    resave: false,
+    saveUninitialized: false,
+    store: MongoStore.create({
+      mongoUrl: process.env.MONGODB_URI || 'mongodb://localhost:27017/lefri-ai',
+    }),
+    cookie: {
+      secure: false, // Set to true in production with HTTPS
+      httpOnly: true,
+      maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
+    },
+  }));
+
   // Configure multer for file uploads
   const upload = multer({
     storage: multer.memoryStorage(),
@@ -20,36 +42,149 @@ export async function registerRoutes(app: Express): Promise<Server> {
     },
   });
 
-  // Auth middleware (simplified for demo)
+  // Auth middleware
   const requireAuth = (req: any, res: any, next: any) => {
-    const userId = req.headers['x-user-id'] || '66a1b2c3d4e5f6789abc1234'; // Demo user
-    req.userId = userId as string;
+    if (!req.session?.userId) {
+      return res.status(401).json({ error: 'Authentication required' });
+    }
+    req.userId = req.session.userId;
     next();
   };
 
   // Authentication endpoints
   app.post("/api/auth/google", async (req, res) => {
     try {
-      const { email, name, googleId } = req.body;
+      const { code } = req.body;
       
-      let user = await storage.getUserByGoogleId(googleId);
+      if (!code) {
+        return res.status(400).json({ error: 'Authorization code required' });
+      }
+
+      // Get user info from Google
+      const googleUser = await googleAuthService.getUserInfo(code);
+      
+      let user = await storage.getUserByGoogleId(googleUser.id);
       if (!user) {
-        user = await storage.getUserByEmail(email);
+        user = await storage.getUserByEmail(googleUser.email);
         if (!user) {
           user = await storage.createUser({
-            email,
-            name,
-            googleId,
-            language: "en",
+            email: googleUser.email,
+            name: googleUser.name,
+            googleId: googleUser.id,
+            language: "es",
             country: "EC"
           });
+        } else {
+          // Update existing user with Google ID
+          user = await storage.updateUser(user.id, { googleId: googleUser.id });
         }
       }
       
-      res.json({ user, token: `demo_token_${user.id}` });
+      // Set session
+      req.session.userId = user.id;
+      req.session.save((err) => {
+        if (err) {
+          console.error('Session save error:', err);
+        }
+      });
+      
+      res.json({ user });
     } catch (error) {
       res.status(500).json({ error: "Authentication failed" });
     }
+  });
+
+  // Google OAuth URL endpoint
+  app.get("/api/auth/google/url", (req, res) => {
+    try {
+      const authUrl = googleAuthService.getAuthUrl();
+      res.json({ authUrl });
+    } catch (error) {
+      console.error('Error generating Google OAuth URL:', error);
+      res.status(500).json({ error: 'Failed to generate OAuth URL' });
+    }
+  });
+
+  // Manual login endpoint
+  app.post("/api/auth/login", async (req, res) => {
+    try {
+      const { email, password } = req.body;
+      
+      if (!email || !password) {
+        return res.status(400).json({ error: 'Email and password required' });
+      }
+
+      const user = await storage.getUserByEmail(email);
+      if (!user) {
+        return res.status(401).json({ error: 'Invalid credentials' });
+      }
+
+      // In a real app, verify password hash here
+      // For now, we'll accept any password for demo purposes
+      
+      // Set session
+      req.session.userId = user.id;
+      req.session.save((err) => {
+        if (err) {
+          console.error('Session save error:', err);
+        }
+      });
+      
+      res.json({ user });
+    } catch (error) {
+      console.error('Login error:', error);
+      res.status(500).json({ error: 'Login failed' });
+    }
+  });
+
+  // Manual registration endpoint
+  app.post("/api/auth/register", async (req, res) => {
+    try {
+      const { email, password, name, country = "EC", language = "es" } = req.body;
+      
+      if (!email || !password || !name) {
+        return res.status(400).json({ error: 'Email, password, and name required' });
+      }
+
+      // Check if user already exists
+      const existingUser = await storage.getUserByEmail(email);
+      if (existingUser) {
+        return res.status(409).json({ error: 'User already exists' });
+      }
+
+      // Create new user
+      const user = await storage.createUser({
+        email,
+        name,
+        language,
+        country,
+        // In a real app, hash the password here
+      });
+      
+      // Set session
+      req.session.userId = user.id;
+      req.session.save((err) => {
+        if (err) {
+          console.error('Session save error:', err);
+        }
+      });
+      
+      res.json({ user });
+    } catch (error) {
+      console.error('Registration error:', error);
+      res.status(500).json({ error: 'Registration failed' });
+    }
+  });
+
+  // Logout endpoint
+  app.post("/api/auth/logout", (req: any, res) => {
+    req.session.destroy((err) => {
+      if (err) {
+        console.error('Session destruction error:', err);
+        return res.status(500).json({ error: 'Logout failed' });
+      }
+      res.json({ message: 'Logged out successfully' });
+    });
   });
 
   app.get("/api/auth/me", requireAuth, async (req: any, res) => {
