@@ -14,11 +14,10 @@ import { useLocation } from 'wouter';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { useTranslation } from '@/contexts/translations';
 
 const profileSchema = z.object({
   name: z.string().min(1, 'Name is required'),
-  email: z.string().email('Invalid email address'),
+  email: z.string().email('Invalid email'),
   phone: z.string().optional(),
   language: z.string(),
   country: z.string(),
@@ -30,7 +29,6 @@ export default function Profile() {
   const [, setLocation] = useLocation();
   const { user, updateUser } = useAuth();
   const queryClient = useQueryClient();
-  const { t } = useTranslation();
 
   const { data: consultations } = useQuery({
     queryKey: ['/api/consultations'],
@@ -86,7 +84,7 @@ export default function Profile() {
     { value: 'EC', label: '🇪🇨 Ecuador' },
     { value: 'CO', label: '🇨🇴 Colombia' },
     { value: 'PE', label: '🇵🇪 Perú' },
-    { value: 'US', label: '🇺🇸 United States' },
+    { value: 'US', label: '🇺🇸 Estados Unidos' },
     { value: 'MX', label: '🇲🇽 México' },
   ];
 
@@ -114,7 +112,7 @@ export default function Profile() {
             >
               <ArrowLeft className="w-5 h-5 text-neutral-600" />
             </Button>
-            <h1 className="text-2xl font-bold text-neutral-900">{t('profile')}</h1>
+            <h1 className="text-2xl font-bold text-neutral-900">My Profile</h1>
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -124,14 +122,14 @@ export default function Profile() {
                 <CardHeader>
                   <CardTitle className="flex items-center space-x-2">
                     <User className="w-5 h-5" />
-                    <span>{t('personalInfo')}</span>
+                    <span>Profile Information</span>
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
                   <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div>
-                        <Label htmlFor="name">{t('fullName')}</Label>
+                        <Label htmlFor="name">Full Name</Label>
                         <Input
                           id="name"
                           placeholder="John Doe"
@@ -143,7 +141,7 @@ export default function Profile() {
                       </div>
                       
                       <div>
-                        <Label htmlFor="email">{t('email')}</Label>
+                        <Label htmlFor="email">Email</Label>
                         <Input
                           id="email"
                           type="email"
@@ -156,7 +154,7 @@ export default function Profile() {
                       </div>
                       
                       <div>
-                        <Label htmlFor="phone">{t('phone')}</Label>
+                        <Label htmlFor="phone">Phone Number</Label>
                         <Input
                           id="phone"
                           type="tel"
@@ -169,10 +167,10 @@ export default function Profile() {
                       </div>
                       
                       <div>
-                        <Label htmlFor="country">{t('country')}</Label>
+                        <Label htmlFor="country">Country</Label>
                         <Select onValueChange={(value) => setValue('country', value)}>
                           <SelectTrigger>
-                            <SelectValue placeholder={t('selectCountry')} />
+                            <SelectValue placeholder="Select country" />
                           </SelectTrigger>
                           <SelectContent>
                             {countries.map((country) => (
@@ -188,10 +186,10 @@ export default function Profile() {
                       </div>
                       
                       <div>
-                        <Label htmlFor="language">{t('language')}</Label>
+                        <Label htmlFor="language">Language</Label>
                         <Select onValueChange={(value) => setValue('language', value)}>
                           <SelectTrigger>
-                            <SelectValue placeholder={t('selectLanguage')} />
+                            <SelectValue placeholder="Select language" />
                           </SelectTrigger>
                           <SelectContent>
                             {languages.map((language) => (
@@ -213,7 +211,7 @@ export default function Profile() {
                         className="bg-blue-500 hover:bg-blue-600"
                         disabled={!isDirty || updateProfileMutation.isPending}
                       >
-                        {updateProfileMutation.isPending ? t('saving') : t('saveChanges')}
+                        {updateProfileMutation.isPending ? 'Saving...' : 'Save Changes'}
                       </Button>
                     </div>
                   </form>
@@ -227,24 +225,24 @@ export default function Profile() {
                 <CardHeader>
                   <CardTitle className="flex items-center space-x-2">
                     <BarChart3 className="w-5 h-5" />
-                    <span>{t('usageStats')}</span>
+                    <span>Usage Statistics</span>
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div className="flex items-center justify-between">
-                    <span className="text-sm text-neutral-600">{t('consultationsCompleted')}</span>
+                    <span className="text-sm text-neutral-600">Consultations completed</span>
                     <span className="text-lg font-bold text-blue-500">
                       {consultations?.length || 0}
                     </span>
                   </div>
                   <div className="flex items-center justify-between">
-                    <span className="text-sm text-neutral-600">{t('processesStarted')}</span>
+                    <span className="text-sm text-neutral-600">Processes started</span>
                     <span className="text-lg font-bold text-orange-600">
                       {processes?.length || 0}
                     </span>
                   </div>
                   <div className="flex items-center justify-between">
-                    <span className="text-sm text-neutral-600">{t('totalTime')}</span>
+                    <span className="text-sm text-neutral-600">Total time</span>
                     <span className="text-lg font-bold text-neutral-900">
                       {totalHours.toFixed(1)}h
                     </span>

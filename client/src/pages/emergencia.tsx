@@ -18,7 +18,6 @@ import { useLocation } from 'wouter';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { useTranslation } from '@/contexts/translations';
 
 const emergencyContactSchema = z.object({
   name: z.string().min(1, 'Name is required'),
@@ -31,10 +30,9 @@ type EmergencyContactForm = z.infer<typeof emergencyContactSchema>;
 
 export default function Emergencia() {
   const [, setLocation] = useLocation();
-  const { t } = useTranslation();
-  const queryClient = useQueryClient();
   const [isAddingContact, setIsAddingContact] = useState(false);
   const [editingContact, setEditingContact] = useState<any>(null);
+  const queryClient = useQueryClient();
 
   const { data: emergencyContacts } = useQuery({
     queryKey: ['/api/emergency-contacts'],
@@ -44,11 +42,12 @@ export default function Emergencia() {
     },
   });
 
-  const createContactMutation = useMutation({
+  const addContactMutation = useMutation({
     mutationFn: api.createEmergencyContact,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/emergency-contacts'] });
       setIsAddingContact(false);
+      reset();
     },
   });
 
@@ -75,49 +74,40 @@ export default function Emergencia() {
 
   const onSubmit = async (data: EmergencyContactForm) => {
     try {
-      await createContactMutation.mutateAsync(data);
+      await addContactMutation.mutateAsync(data);
     } catch (error) {
-      console.error('Error creating contact:', error);
+      console.error('Error adding contact:', error);
     }
   };
 
-  const handleDeleteContact = async (id: number) => {
-    try {
-      await deleteContactMutation.mutateAsync(id);
-    } catch (error) {
-      console.error('Error deleting contact:', error);
+  const handleDeleteContact = (id: number) => {
+    if (confirm('Are you sure you want to delete this contact?')) {
+      deleteContactMutation.mutate(id);
     }
   };
 
   const getInitials = (name: string) => {
     return name
       .split(' ')
-      .map((n) => n[0])
+      .map(n => n[0])
       .join('')
       .toUpperCase()
       .slice(0, 2);
   };
 
   const getAvatarColor = (index: number) => {
-    const colors = [
-      'bg-blue-500',
-      'bg-green-500',
-      'bg-yellow-500',
-      'bg-red-500',
-      'bg-purple-500',
-      'bg-pink-500',
-    ];
+    const colors = ['bg-blue-500', 'bg-green-500', 'bg-purple-500', 'bg-orange-500', 'bg-pink-500'];
     return colors[index % colors.length];
   };
 
   const relationships = [
-    { value: 'mother', label: t('relationship.mother') },
-    { value: 'father', label: t('relationship.father') },
-    { value: 'sibling', label: t('relationship.sibling') },
-    { value: 'partner', label: t('relationship.partner') },
-    { value: 'lawyer', label: t('relationship.lawyer') },
-    { value: 'friend', label: t('relationship.friend') },
-    { value: 'other', label: t('relationship.other') },
+    { value: 'mother', label: 'Mother' },
+    { value: 'father', label: 'Father' },
+    { value: 'sibling', label: 'Sibling' },
+    { value: 'partner', label: 'Partner' },
+    { value: 'lawyer', label: 'Lawyer' },
+    { value: 'friend', label: 'Friend' },
+    { value: 'other', label: 'Other' },
   ];
 
   return (
@@ -136,7 +126,7 @@ export default function Emergencia() {
             >
               <ArrowLeft className="w-5 h-5 text-neutral-600" />
             </Button>
-            <h1 className="text-2xl font-bold text-neutral-900">{t('emergency')}</h1>
+            <h1 className="text-2xl font-bold text-neutral-900">Emergency System</h1>
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -147,50 +137,50 @@ export default function Emergencia() {
             <Card>
               <CardHeader>
                 <div className="flex items-center justify-between">
-                  <CardTitle className="text-xl">{t('emergencyContacts')}</CardTitle>
+                  <CardTitle className="text-xl">Emergency Contacts</CardTitle>
                   <Dialog open={isAddingContact} onOpenChange={setIsAddingContact}>
                     <DialogTrigger asChild>
                       <Button className="bg-blue-500 hover:bg-blue-600">
                         <Plus className="w-4 h-4 mr-2" />
-                        {t('addContact')}
+                        Add
                       </Button>
                     </DialogTrigger>
                     <DialogContent>
                       <DialogHeader>
-                        <DialogTitle>{t('addEmergencyContact')}</DialogTitle>
+                        <DialogTitle>Add Emergency Contact</DialogTitle>
                       </DialogHeader>
+                      
                       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
                         <div>
-                          <Label htmlFor="name">{t('contactName')}</Label>
+                          <Label htmlFor="name">Full Name</Label>
                           <Input
                             id="name"
+                            placeholder="Ex: Maria Perez"
                             {...register('name')}
-                            className="mt-1"
                           />
                           {errors.name && (
-                            <p className="text-sm text-red-500 mt-1">{errors.name.message}</p>
+                            <p className="text-red-500 text-sm mt-1">{errors.name.message}</p>
                           )}
                         </div>
-
+                        
                         <div>
-                          <Label htmlFor="phone">{t('phoneNumber')}</Label>
+                          <Label htmlFor="phone">Phone Number</Label>
                           <Input
                             id="phone"
+                            type="tel"
+                            placeholder="+593 99 123 4567"
                             {...register('phone')}
-                            className="mt-1"
                           />
                           {errors.phone && (
-                            <p className="text-sm text-red-500 mt-1">{errors.phone.message}</p>
+                            <p className="text-red-500 text-sm mt-1">{errors.phone.message}</p>
                           )}
                         </div>
-
+                        
                         <div>
-                          <Label htmlFor="relationship">{t('relationship')}</Label>
-                          <Select
-                            onValueChange={(value) => setValue('relationship', value)}
-                          >
-                            <SelectTrigger className="mt-1">
-                              <SelectValue placeholder={t('selectRelationship')} />
+                          <Label htmlFor="relationship">Relación</Label>
+                          <Select onValueChange={(value) => setValue('relationship', value)}>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Seleccionar relación" />
                             </SelectTrigger>
                             <SelectContent>
                               {relationships.map((rel) => (
@@ -201,32 +191,35 @@ export default function Emergencia() {
                             </SelectContent>
                           </Select>
                           {errors.relationship && (
-                            <p className="text-sm text-red-500 mt-1">{errors.relationship.message}</p>
+                            <p className="text-red-500 text-sm mt-1">{errors.relationship.message}</p>
                           )}
                         </div>
-
+                        
                         <div className="flex items-center space-x-2">
                           <Switch
                             id="whatsapp"
-                            {...register('whatsappEnabled')}
+                            checked={watch('whatsappEnabled')}
+                            onCheckedChange={(checked) => setValue('whatsappEnabled', checked)}
                           />
-                          <Label htmlFor="whatsapp">{t('notifyViaWhatsApp')}</Label>
+                          <Label htmlFor="whatsapp" className="text-sm">
+                            Tiene WhatsApp
+                          </Label>
                         </div>
-
-                        <div className="flex justify-end space-x-2">
-                          <Button
-                            type="button"
+                        
+                        <div className="flex justify-end space-x-3 pt-4">
+                          <Button 
+                            type="button" 
                             variant="outline"
                             onClick={() => setIsAddingContact(false)}
                           >
-                            {t('cancel')}
+                            Cancelar
                           </Button>
-                          <Button
-                            type="submit"
+                          <Button 
+                            type="submit" 
                             className="bg-blue-500 hover:bg-blue-600"
-                            disabled={createContactMutation.isPending}
+                            disabled={addContactMutation.isPending}
                           >
-                            {createContactMutation.isPending ? t('saving') : t('save')}
+                            {addContactMutation.isPending ? 'Guardando...' : 'Guardar Contacto'}
                           </Button>
                         </div>
                       </form>
@@ -253,6 +246,7 @@ export default function Emergencia() {
                             </p>
                           </div>
                         </div>
+                        
                         <div className="flex items-center space-x-2">
                           <Button
                             variant="ghost"
@@ -266,7 +260,7 @@ export default function Emergencia() {
                             variant="ghost"
                             size="sm"
                             onClick={() => handleDeleteContact(contact._id || contact.id)}
-                            className="text-red-500 hover:text-red-600 hover:bg-red-50"
+                            className="text-red-600 hover:text-red-700"
                           >
                             <Trash2 className="w-4 h-4" />
                           </Button>
@@ -274,13 +268,22 @@ export default function Emergencia() {
                       </div>
                     ))
                   ) : (
-                    <Alert>
-                      <AlertDescription>
-                        {t('noEmergencyContacts')}
-                      </AlertDescription>
-                    </Alert>
+                    <div className="text-center py-8 text-neutral-500">
+                      <MessageSquare className="w-8 h-8 mx-auto mb-2 opacity-50" />
+                      <p className="text-sm">No hay contactos de emergencia</p>
+                      <p className="text-xs">Agrega contactos para recibir alertas en caso de emergencia</p>
+                    </div>
                   )}
                 </div>
+                
+                {emergencyContacts?.length > 0 && (
+                  <Alert className="mt-4 border-orange-200 bg-orange-50">
+                    <MessageSquare className="w-4 h-4 text-orange-600" />
+                    <AlertDescription className="text-orange-700">
+                      Los contactos con WhatsApp recibirán alertas instantáneas con tu ubicación.
+                    </AlertDescription>
+                  </Alert>
+                )}
               </CardContent>
             </Card>
           </div>
