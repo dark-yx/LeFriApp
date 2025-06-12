@@ -8,7 +8,6 @@ import { useAuth } from "@/hooks/use-auth";
 import { LanguageProvider } from "@/contexts/LanguageContext";
 import { TranslationProvider } from "@/contexts/translations";
 import { ThemeProvider } from "@/components/theme-provider";
-import { Navigation } from "@/components/Navigation";
 import Login from "@/pages/login";
 import Dashboard from "@/pages/dashboard";
 import Consulta from "@/pages/consulta";
@@ -45,63 +44,60 @@ function Router() {
   }, [initializeAuth]);
 
   return (
-    <>
-      <Navigation />
-      <Switch>
-        <Route path="/login" component={Login} />
-        
-        {/* Redirect root to appropriate page */}
-        <Route path="/">
-          {user ? <Redirect to="/dashboard" /> : <Redirect to="/login" />}
-        </Route>
-        
-        {/* Protected routes */}
-        <Route path="/dashboard">
-          <AuthGuard>
-            <Dashboard />
-          </AuthGuard>
-        </Route>
-        
-        <Route path="/consulta">
-          <AuthGuard>
-            <Consulta />
-          </AuthGuard>
-        </Route>
-        
-        <Route path="/proceso">
-          <AuthGuard>
-            <Proceso />
-          </AuthGuard>
-        </Route>
-        
-        <Route path="/processes">
-          <AuthGuard>
-            <ProcessesPage />
-          </AuthGuard>
-        </Route>
-        
-        <Route path="/processes/:id">
-          <AuthGuard>
-            <ProcessDetailPage />
-          </AuthGuard>
-        </Route>
-        
-        <Route path="/emergencia">
-          <AuthGuard>
-            <Emergencia />
-          </AuthGuard>
-        </Route>
-        
-        <Route path="/profile">
-          <AuthGuard>
-            <Profile />
-          </AuthGuard>
-        </Route>
-        
-        {/* Fallback to 404 */}
-        <Route component={NotFound} />
-      </Switch>
-    </>
+    <Switch>
+      <Route path="/login" component={Login} />
+      
+      {/* Redirect root to appropriate page */}
+      <Route path="/">
+        {user ? <Redirect to="/dashboard" /> : <Redirect to="/login" />}
+      </Route>
+      
+      {/* Protected routes */}
+      <Route path="/dashboard">
+        <AuthGuard>
+          <Dashboard />
+        </AuthGuard>
+      </Route>
+      
+      <Route path="/consulta">
+        <AuthGuard>
+          <Consulta />
+        </AuthGuard>
+      </Route>
+      
+      <Route path="/proceso">
+        <AuthGuard>
+          <Proceso />
+        </AuthGuard>
+      </Route>
+      
+      <Route path="/processes">
+        <AuthGuard>
+          <ProcessesPage />
+        </AuthGuard>
+      </Route>
+      
+      <Route path="/processes/:id">
+        <AuthGuard>
+          <ProcessDetailPage />
+        </AuthGuard>
+      </Route>
+      
+      <Route path="/emergencia">
+        <AuthGuard>
+          <Emergencia />
+        </AuthGuard>
+      </Route>
+      
+      <Route path="/profile">
+        <AuthGuard>
+          <Profile />
+        </AuthGuard>
+      </Route>
+      
+      {/* Fallback to 404 */}
+      <Route component={NotFound} />
+    </Switch>
   );
 }
 

@@ -166,11 +166,11 @@ export function ProcessDetail({ processId, country }: ProcessDetailProps) {
     <div className="space-y-6">
       {/* Header */}
       <Card>
-        <CardHeader>
+        <CardHeader className="pb-4">
           <div className="flex justify-between items-start">
-            <div>
-              <CardTitle className="text-2xl">{processData.title}</CardTitle>
-              <CardDescription>{processData.description}</CardDescription>
+            <div className="space-y-1">
+              <CardTitle className="text-2xl font-bold text-neutral-900">{processData.title}</CardTitle>
+              <CardDescription className="text-neutral-500">{processData.description}</CardDescription>
               <div className="flex gap-2 mt-2">
                 <Badge variant={processData.status === 'completed' ? 'default' : 'secondary'}>
                   {processData.status === 'completed' ? 'Completado' : 
@@ -208,9 +208,9 @@ export function ProcessDetail({ processId, country }: ProcessDetailProps) {
         <CardContent>
           <div className="space-y-4">
             <div>
-              <Label>Progreso del Proceso</Label>
-              <Progress value={processData.progress} className="mt-2" />
-              <p className="text-sm text-muted-foreground mt-1">
+              <Label className="text-sm font-medium text-neutral-700">Progreso del Proceso</Label>
+              <Progress value={processData.progress} className="mt-2 h-2" />
+              <p className="text-sm text-neutral-500 mt-1">
                 {processData.progress}% completado
               </p>
             </div>
@@ -221,15 +221,15 @@ export function ProcessDetail({ processId, country }: ProcessDetailProps) {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Case Information */}
         <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+          <CardHeader className="pb-4">
+            <CardTitle className="flex items-center gap-2 text-lg font-semibold text-neutral-900">
               <FileText className="h-5 w-5" />
               Información del Caso
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <div>
-              <Label>Número de Caso</Label>
+              <Label className="text-sm font-medium text-neutral-700">Número de Caso</Label>
               <Input
                 value={processData.metadata?.caseNumber || ''}
                 onChange={(e) => {
@@ -237,10 +237,11 @@ export function ProcessDetail({ processId, country }: ProcessDetailProps) {
                   updateProcessMutation.mutate({ metadata });
                 }}
                 placeholder="Ingrese número de caso"
+                className="mt-1"
               />
             </div>
             <div>
-              <Label>Tribunal</Label>
+              <Label className="text-sm font-medium text-neutral-700">Tribunal</Label>
               <Input
                 value={processData.metadata?.court || ''}
                 onChange={(e) => {
@@ -248,10 +249,11 @@ export function ProcessDetail({ processId, country }: ProcessDetailProps) {
                   updateProcessMutation.mutate({ metadata });
                 }}
                 placeholder="Tribunal competente"
+                className="mt-1"
               />
             </div>
             <div>
-              <Label>Juez</Label>
+              <Label className="text-sm font-medium text-neutral-700">Juez</Label>
               <Input
                 value={processData.metadata?.judge || ''}
                 onChange={(e) => {
@@ -259,10 +261,11 @@ export function ProcessDetail({ processId, country }: ProcessDetailProps) {
                   updateProcessMutation.mutate({ metadata });
                 }}
                 placeholder="Nombre del juez"
+                className="mt-1"
               />
             </div>
             <div>
-              <Label>Parte Contraria</Label>
+              <Label className="text-sm font-medium text-neutral-700">Parte Contraria</Label>
               <Input
                 value={processData.metadata?.opposingParty || ''}
                 onChange={(e) => {
@@ -270,21 +273,23 @@ export function ProcessDetail({ processId, country }: ProcessDetailProps) {
                   updateProcessMutation.mutate({ metadata });
                 }}
                 placeholder="Nombre de la parte contraria"
+                className="mt-1"
               />
             </div>
             <div>
-              <Label>Monto en Disputa</Label>
+              <Label className="text-sm font-medium text-neutral-700">Monto</Label>
               <Input
                 value={processData.metadata?.amount || ''}
                 onChange={(e) => {
                   const metadata = { ...(processData.metadata || {}), amount: e.target.value };
                   updateProcessMutation.mutate({ metadata });
                 }}
-                placeholder="Monto económico"
+                placeholder="Monto en disputa"
+                className="mt-1"
               />
             </div>
             <div>
-              <Label>Fecha Límite</Label>
+              <Label className="text-sm font-medium text-neutral-700">Fecha Límite</Label>
               <Input
                 type="date"
                 value={processData.metadata?.deadline || ''}
@@ -292,6 +297,7 @@ export function ProcessDetail({ processId, country }: ProcessDetailProps) {
                   const metadata = { ...(processData.metadata || {}), deadline: e.target.value };
                   updateProcessMutation.mutate({ metadata });
                 }}
+                className="mt-1"
               />
             </div>
           </CardContent>
@@ -299,21 +305,24 @@ export function ProcessDetail({ processId, country }: ProcessDetailProps) {
 
         {/* Legal Basis */}
         <Card>
-          <CardHeader>
-            <CardTitle>Base Legal</CardTitle>
+          <CardHeader className="pb-4">
+            <CardTitle className="flex items-center gap-2 text-lg font-semibold text-neutral-900">
+              <FileText className="h-5 w-5" />
+              Base Legal
+            </CardTitle>
           </CardHeader>
           <CardContent>
-            <ScrollArea className="h-96">
+            <ScrollArea className="h-[400px] pr-4">
               <div className="space-y-4">
                 <div>
-                  <Label>Legal Foundation</Label>
+                  <Label className="text-sm font-medium text-neutral-700">Fundamento Legal</Label>
                   <div 
                     className="mt-1 p-4 border rounded-md bg-white min-h-[200px] prose prose-sm max-w-none"
                     dangerouslySetInnerHTML={{ __html: processData.legalBasis || '' }}
                   />
                 </div>
                 <div>
-                  <Label>Artículos Constitucionales</Label>
+                  <Label className="text-sm font-medium text-neutral-700">Artículos Constitucionales</Label>
                   <div className="mt-2 space-y-2">
                     {(processData.constitutionalArticles || []).map((article, index) => (
                       <Badge key={index} variant="outline" className="block p-2 text-sm">
@@ -327,20 +336,53 @@ export function ProcessDetail({ processId, country }: ProcessDetailProps) {
           </CardContent>
         </Card>
 
-        {/* Required Documents */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Documentos Requeridos</CardTitle>
+        {/* Steps */}
+        <Card className="lg:col-span-2">
+          <CardHeader className="pb-4">
+            <CardTitle className="flex items-center gap-2 text-lg font-semibold text-neutral-900">
+              <CheckCircle className="h-5 w-5" />
+              Pasos del Proceso
+            </CardTitle>
           </CardHeader>
           <CardContent>
-            <ScrollArea className="h-64">
-              <div className="space-y-2">
-                {(processData.requiredDocuments || []).map((doc, index) => (
-                  <div key={index} className="flex items-center gap-2 p-2 border rounded">
-                    <Checkbox id={`doc-${index}`} />
-                    <Label htmlFor={`doc-${index}`} className="text-sm">
-                      {doc}
-                    </Label>
+            <ScrollArea className="h-[400px] pr-4">
+              <div className="space-y-4">
+                {processData.steps.map((step, index) => (
+                  <div key={step.id} className="flex items-start gap-4">
+                    <Checkbox
+                      checked={step.completed}
+                      onCheckedChange={(checked) => {
+                        toggleStepMutation.mutate({
+                          stepId: step.id,
+                          completed: checked as boolean
+                        });
+                      }}
+                      className="mt-1"
+                    />
+                    <div className="flex-1 space-y-1">
+                      <div className="flex items-center justify-between">
+                        <h4 className="font-medium text-neutral-900">{step.title}</h4>
+                        {step.dueDate && (
+                          <span className="text-sm text-neutral-500">
+                            {new Date(step.dueDate).toLocaleDateString('es-ES')}
+                          </span>
+                        )}
+                      </div>
+                      <p className="text-sm text-neutral-500">{step.description}</p>
+                      {step.documents.length > 0 && (
+                        <div className="mt-2">
+                          <Label className="text-xs font-medium text-neutral-700">Documentos Requeridos</Label>
+                          <ul className="mt-1 space-y-1">
+                            {step.documents.map((doc, i) => (
+                              <li key={i} className="text-sm text-neutral-500 flex items-center gap-2">
+                                <FileText className="h-4 w-4" />
+                                {doc}
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      )}
+                    </div>
                   </div>
                 ))}
               </div>
@@ -349,88 +391,17 @@ export function ProcessDetail({ processId, country }: ProcessDetailProps) {
         </Card>
       </div>
 
-      {/* Process Steps */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <CheckCircle className="h-5 w-5" />
-            Pasos del Proceso
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            {(processData.steps || []).map((step, index) => (
-              <div key={step.id} className="border rounded-lg p-4">
-                <div className="flex items-start gap-3">
-                  <Checkbox
-                    checked={step.completed}
-                    onCheckedChange={(checked) => 
-                      toggleStepMutation.mutate({ 
-                        stepId: step.id, 
-                        completed: checked as boolean 
-                      })
-                    }
-                    className="mt-1"
-                  />
-                  <div className="flex-1">
-                    <div className="flex justify-between items-start">
-                      <h4 className="font-medium">{step.title}</h4>
-                      <Badge variant={step.completed ? 'default' : 'secondary'}>
-                        Paso {index + 1}
-                      </Badge>
-                    </div>
-                    <p className="text-sm text-muted-foreground mt-1">
-                      {step.description}
-                    </p>
-                    {step.dueDate && (
-                      <p className="text-xs text-muted-foreground mt-2">
-                        Fecha límite: {new Date(step.dueDate).toLocaleDateString()}
-                      </p>
-                    )}
-                    {(step.requirements || []).length > 0 && (
-                      <div className="mt-2">
-                        <Label className="text-xs">Requisitos:</Label>
-                        <ul className="text-xs text-muted-foreground mt-1 space-y-1">
-                          {(step.requirements || []).map((req, reqIndex) => (
-                            <li key={reqIndex} className="flex items-center gap-1">
-                              <span className="w-1 h-1 bg-current rounded-full" />
-                              {req}
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    )}
-                    {(step.documents || []).length > 0 && (
-                      <div className="mt-2">
-                        <Label className="text-xs">Documentos necesarios:</Label>
-                        <div className="flex flex-wrap gap-1 mt-1">
-                          {(step.documents || []).map((doc, docIndex) => (
-                            <Badge key={docIndex} variant="outline" className="text-xs">
-                              {doc}
-                            </Badge>
-                          ))}
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
-
       {/* Chat Interface */}
       {showChat && (
         <Card>
-          <CardHeader>
-            <CardTitle>Consulta con IA sobre el Proceso</CardTitle>
-            <CardDescription>
-              Haz preguntas específicas sobre tu proceso legal y recibe orientación personalizada
-            </CardDescription>
+          <CardHeader className="pb-4">
+            <CardTitle className="flex items-center gap-2 text-lg font-semibold text-neutral-900">
+              <MessageCircle className="h-5 w-5" />
+              Asistente Legal
+            </CardTitle>
           </CardHeader>
           <CardContent>
-            <ChatInterface country={country} processId={processId} />
+            <ChatInterface processId={processId} />
           </CardContent>
         </Card>
       )}

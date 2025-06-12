@@ -246,23 +246,21 @@ export default function Emergencia() {
                             </p>
                           </div>
                         </div>
+                        
                         <div className="flex items-center space-x-2">
-                          {contact.whatsappEnabled && (
-                            <MessageSquare className="w-4 h-4 text-green-500" />
-                          )}
                           <Button
-                            size="sm"
                             variant="ghost"
-                            className="text-neutral-400 hover:text-neutral-600 p-1"
+                            size="sm"
                             onClick={() => setEditingContact(contact)}
+                            className="text-neutral-600 hover:text-neutral-900"
                           >
                             <Edit className="w-4 h-4" />
                           </Button>
                           <Button
-                            size="sm"
                             variant="ghost"
-                            className="text-red-400 hover:text-red-600 p-1"
-                            onClick={() => handleDeleteContact(contact.id)}
+                            size="sm"
+                            onClick={() => handleDeleteContact(contact._id || contact.id)}
+                            className="text-red-600 hover:text-red-700"
                           >
                             <Trash2 className="w-4 h-4" />
                           </Button>
@@ -272,14 +270,8 @@ export default function Emergencia() {
                   ) : (
                     <div className="text-center py-8 text-neutral-500">
                       <MessageSquare className="w-8 h-8 mx-auto mb-2 opacity-50" />
-                      <p className="text-sm">No tienes contactos de emergencia</p>
-                      <Button 
-                        variant="link" 
-                        className="text-blue-500 mt-2"
-                        onClick={() => setIsAddingContact(true)}
-                      >
-                        Agregar primer contacto
-                      </Button>
+                      <p className="text-sm">No hay contactos de emergencia</p>
+                      <p className="text-xs">Agrega contactos para recibir alertas en caso de emergencia</p>
                     </div>
                   )}
                 </div>

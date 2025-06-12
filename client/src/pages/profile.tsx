@@ -1,5 +1,6 @@
+import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { ArrowLeft, User, Settings, BarChart3 } from 'lucide-react';
+import { ArrowLeft, BarChart3, Settings, User } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -16,7 +17,7 @@ import { z } from 'zod';
 
 const profileSchema = z.object({
   name: z.string().min(1, 'Name is required'),
-  email: z.string().email('Valid email is required'),
+  email: z.string().email('Invalid email'),
   phone: z.string().optional(),
   language: z.string(),
   country: z.string(),
@@ -119,60 +120,57 @@ export default function Profile() {
             <div className="lg:col-span-2">
               <Card>
                 <CardHeader>
-                  <CardTitle className="text-xl flex items-center space-x-2">
+                  <CardTitle className="flex items-center space-x-2">
                     <User className="w-5 h-5" />
-                    <span>Personal Information</span>
+                    <span>Profile Information</span>
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
                   <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div>
                         <Label htmlFor="name">Full Name</Label>
                         <Input
                           id="name"
+                          placeholder="John Doe"
                           {...register('name')}
                         />
                         {errors.name && (
                           <p className="text-red-500 text-sm mt-1">{errors.name.message}</p>
                         )}
                       </div>
+                      
                       <div>
                         <Label htmlFor="email">Email</Label>
                         <Input
                           id="email"
                           type="email"
+                          placeholder="john@example.com"
                           {...register('email')}
                         />
                         {errors.email && (
                           <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>
                         )}
                       </div>
-                    </div>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      
                       <div>
                         <Label htmlFor="phone">Phone Number</Label>
                         <Input
                           id="phone"
                           type="tel"
+                          placeholder="+593 99 123 4567"
                           {...register('phone')}
-                          placeholder="+1234567890"
                         />
                         {errors.phone && (
                           <p className="text-red-500 text-sm mt-1">{errors.phone.message}</p>
                         )}
                       </div>
-                    </div>
-                    
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      
                       <div>
                         <Label htmlFor="country">Country</Label>
-                        <Select 
-                          value={watch('country')} 
-                          onValueChange={(value) => setValue('country', value)}
-                        >
+                        <Select onValueChange={(value) => setValue('country', value)}>
                           <SelectTrigger>
-                            <SelectValue />
+                            <SelectValue placeholder="Select country" />
                           </SelectTrigger>
                           <SelectContent>
                             {countries.map((country) => (
@@ -182,15 +180,16 @@ export default function Profile() {
                             ))}
                           </SelectContent>
                         </Select>
+                        {errors.country && (
+                          <p className="text-red-500 text-sm mt-1">{errors.country.message}</p>
+                        )}
                       </div>
+                      
                       <div>
-                        <Label htmlFor="language">Preferred Language</Label>
-                        <Select 
-                          value={watch('language')} 
-                          onValueChange={(value) => setValue('language', value)}
-                        >
+                        <Label htmlFor="language">Language</Label>
+                        <Select onValueChange={(value) => setValue('language', value)}>
                           <SelectTrigger>
-                            <SelectValue />
+                            <SelectValue placeholder="Select language" />
                           </SelectTrigger>
                           <SelectContent>
                             {languages.map((language) => (
@@ -200,10 +199,13 @@ export default function Profile() {
                             ))}
                           </SelectContent>
                         </Select>
+                        {errors.language && (
+                          <p className="text-red-500 text-sm mt-1">{errors.language.message}</p>
+                        )}
                       </div>
                     </div>
                     
-                    <div className="pt-4">
+                    <div className="flex justify-end">
                       <Button 
                         type="submit" 
                         className="bg-blue-500 hover:bg-blue-600"
@@ -217,7 +219,6 @@ export default function Profile() {
               </Card>
             </div>
             
-            {/* Stats and Settings */}
             <div className="space-y-6">
               {/* Usage Stats */}
               <Card>
@@ -257,24 +258,18 @@ export default function Profile() {
                     <span>Account Settings</span>
                   </CardTitle>
                 </CardHeader>
-                <CardContent className="space-y-3">
+                <CardContent className="space-y-4">
                   <div className="flex items-center justify-between">
-                    <Label htmlFor="email-notifications" className="text-sm">
-                      Email notifications
-                    </Label>
-                    <Switch id="email-notifications" defaultChecked />
+                    <span className="text-sm text-neutral-600">Email notifications</span>
+                    <Switch defaultChecked />
                   </div>
                   <div className="flex items-center justify-between">
-                    <Label htmlFor="whatsapp-alerts" className="text-sm">
-                      WhatsApp alerts
-                    </Label>
-                    <Switch id="whatsapp-alerts" defaultChecked />
+                    <span className="text-sm text-neutral-600">WhatsApp notifications</span>
+                    <Switch defaultChecked />
                   </div>
                   <div className="flex items-center justify-between">
-                    <Label htmlFor="dark-mode" className="text-sm">
-                      Dark mode
-                    </Label>
-                    <Switch id="dark-mode" />
+                    <span className="text-sm text-neutral-600">Dark mode</span>
+                    <Switch />
                   </div>
                 </CardContent>
               </Card>

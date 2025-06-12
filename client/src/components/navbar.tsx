@@ -7,24 +7,40 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { useAuth } from '@/hooks/use-auth';
 import { useTheme } from '@/components/theme-provider';
 import { Scale, ChevronDown, User, Settings, LogOut, Moon, Sun, Globe } from 'lucide-react';
+import { useQueryClient } from '@tanstack/react-query';
 
 export function Navbar() {
   const [location, setLocation] = useLocation();
   const { user, logout, updateUser } = useAuth();
   const { theme, setTheme } = useTheme();
   const [language, setLanguage] = useState(user?.language || 'en');
+  const queryClient = useQueryClient();
 
-  const handleLanguageChange = (newLanguage: string) => {
-    setLanguage(newLanguage);
-    updateUser({ language: newLanguage });
-    // Update translation context
-    localStorage.setItem('language', newLanguage);
-    window.location.reload(); // Temporary reload for immediate effect
+  const handleLanguageChange = async (newLanguage: string) => {
+    try {
+      setLanguage(newLanguage);
+      await updateUser({ language: newLanguage });
+      localStorage.setItem('language', newLanguage);
+      // Actualizar el contexto de idioma sin recargar
+      document.documentElement.lang = newLanguage;
+      // Invalidar queries relacionadas con el idioma
+      queryClient.invalidateQueries({ queryKey: ['translations'] });
+    } catch (error) {
+      console.error('Error al cambiar el idioma:', error);
+    }
   };
 
-  const handleLogout = () => {
-    logout();
-    setLocation('/login');
+  const handleLogout = async () => {
+    try {
+      await logout();
+      setLocation('/login');
+    } catch (error) {
+      console.error('Error al cerrar sesión:', error);
+    }
+  };
+
+  const handleNavigation = (path: string) => {
+    setLocation(path);
   };
 
   const getInitials = (name: string) => {
@@ -36,13 +52,17 @@ export function Navbar() {
       .slice(0, 2);
   };
 
+  const getFirstName = (name: string) => {
+    return name.split(' ')[0];
+  };
+
   const languageOptions = [
     { value: 'en', label: '🇺🇸 English' },
     { value: 'es', label: '🇪🇸 Español' },
   ];
 
   return (
-    <header className="bg-white shadow-sm border-b border-neutral-200">
+    <header className="bg-white shadow-sm border-b border-neutral-200 sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
@@ -79,13 +99,13 @@ export function Navbar() {
                     </AvatarFallback>
                   </Avatar>
                   <span className="text-sm font-medium text-neutral-700">
-                    {user?.name || 'Usuario'}
+                    {user ? getFirstName(user.name) : 'Perfil'}
                   </span>
                   <ChevronDown className="w-4 h-4 text-neutral-500" />
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-48">
-                <DropdownMenuItem onClick={() => setLocation('/profile')}>
+                <DropdownMenuItem onClick={() => handleNavigation('/profile')}>
                   <User className="w-4 h-4 mr-2" />
                   Mi Perfil
                 </DropdownMenuItem>
