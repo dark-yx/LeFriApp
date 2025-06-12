@@ -6,6 +6,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { useAuth } from "@/hooks/use-auth";
 import { LanguageProvider } from "@/contexts/LanguageContext";
+import { TranslationProvider } from "@/contexts/translations";
 import { ThemeProvider } from "@/components/theme-provider";
 import Login from "@/pages/login";
 import Dashboard from "@/pages/dashboard";
@@ -104,12 +105,14 @@ function App() {
   return (
     <ThemeProvider defaultTheme="light" storageKey="replit-legal-theme">
       <QueryClientProvider client={queryClient}>
-        <TranslationProvider>
-          <TooltipProvider>
-            <Toaster />
-            <Router />
-          </TooltipProvider>
-        </TranslationProvider>
+        <LanguageProvider>
+          <TranslationProvider>
+            <TooltipProvider>
+              <Toaster />
+              <Router />
+            </TooltipProvider>
+          </TranslationProvider>
+        </LanguageProvider>
       </QueryClientProvider>
     </ThemeProvider>
   );
