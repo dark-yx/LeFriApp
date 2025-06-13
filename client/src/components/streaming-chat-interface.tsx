@@ -4,6 +4,8 @@ import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent } from '@/components/ui/card';
 import { Bot, User, Send, Loader2 } from 'lucide-react';
 import { useAuth } from '@/hooks/use-auth';
+import { useLanguage } from '@/contexts/LanguageContext';
+import { useTranslations } from '@/lib/i18n';
 
 interface ChatMessage {
   id: string;
@@ -27,7 +29,7 @@ export function StreamingChatInterface({ country }: StreamingChatInterfaceProps)
   const [messages, setMessages] = useState<ChatMessage[]>([
     {
       id: 'welcome',
-      content: 'Hello! I\'m your intelligent legal assistant. I can help you with questions about laws, rights, legal processes, and your country\'s constitution. How can I help you today?',
+      content: {t.welcomeMessage,
       sender: 'ai',
       timestamp: new Date(),
     }

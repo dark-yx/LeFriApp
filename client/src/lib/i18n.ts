@@ -206,7 +206,23 @@ export const translations = {
     languages: {
       en: "English",
       es: "Spanish"
-    }
+    },
+
+    // Legal Consultation Interface
+    welcomeMessage: "Hello! I'm your intelligent legal assistant. I can help you with questions about laws, rights, legal processes, and your country's constitution. How can I help you today?",
+    legalAssistantWelcome: "Hello! I'm your legal assistant",
+    legalAssistantDescription: "You can ask me about rights, legal procedures, or any legal consultation.",
+    quickQuestion1: "What are my basic labor rights?",
+    quickQuestion2: "How can I start a divorce process?",
+    quickQuestion3: "What should I do if I'm not being paid my salary?",
+    quickQuestion4: "What are tenant rights?",
+    thinking: "Thinking...",
+    typeQuestion: "Type your legal question...",
+    legalResources: "Legal Resources",
+    constitution: "National Constitution",
+    civilCode: "Civil Code",
+    updated: "Updated",
+    noActivity: "No consultations yet. Start by asking a legal question.",
   },
 
   es: {
@@ -413,7 +429,23 @@ export const translations = {
     languages: {
       en: "Inglés",
       es: "Español"
-    }
+    },
+
+    // Legal Consultation Interface
+    welcomeMessage: "¡Hola! Soy tu asistente legal inteligente. Puedo ayudarte con preguntas sobre leyes, derechos, procesos legales y la constitución de tu país. ¿En qué puedo ayudarte hoy?",
+    legalAssistantWelcome: "¡Hola! Soy tu asistente legal",
+    legalAssistantDescription: "Puedes preguntarme sobre derechos, procedimientos legales o cualquier consulta jurídica.",
+    quickQuestion1: "¿Cuáles son mis derechos laborales básicos?",
+    quickQuestion2: "¿Cómo inicio un proceso de divorcio?",
+    quickQuestion3: "¿Qué debo hacer si no me pagan el sueldo?",
+    quickQuestion4: "¿Cuáles son los derechos del inquilino?",
+    thinking: "Pensando...",
+    typeQuestion: "Escribe tu consulta legal...",
+    legalResources: "Recursos Legales",
+    constitution: "Constitución Nacional",
+    civilCode: "Código Civil",
+    updated: "Actualizada",
+    noActivity: "Aún no hay consultas. Comienza haciendo una pregunta legal."
   }
 };
 
