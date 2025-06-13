@@ -218,7 +218,7 @@ export function ProcessDetail({ processId, country }: ProcessDetailProps) {
         </CardContent>
       </Card>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Case Information */}
         <Card>
           <CardHeader className="pb-4">
