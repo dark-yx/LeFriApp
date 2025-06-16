@@ -18,11 +18,11 @@ if [ ! -f "package.json" ]; then
 fi
 
 # Configurar variables de entorno
-export MONGODB_URI="mongodb+srv://jonnathanyosue:DONEVEK.11jpHH@lefri-ai.vbqbw0d.mongodb.net/?retryWrites=true&w=majority&appName=LeFri-AI"
-export GOOGLE_OAUTH_CLIENT_ID="98044249097-nb4uke2c4kqtdpugfh3k7j389lnrpk0u.apps.googleusercontent.com"
-export GOOGLE_OAUTH_CLIENT_SECRET="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"
+export MONGODB_URI="mongodb+srv://jejemplo:EJEMPLO.11jp11@lefri-ai.vbdfdd.mongodb.net/?retryWrites=true&w=majority&appName=LeFri-AI"
+export GOOGLE_OAUTH_CLIENT_ID="935434597-nb4uke2c4kqtdejemplonrpk0u.apps.googleusercontent.com"
+export GOOGLE_OAUTH_CLIENT_SECRET="GSDSPX-Oc5ejemploYTRRR6l2hlO_YBj-mb"
 export GOOGLE_OAUTH_REDIRECT_URI="http://localhost:5000/api/auth/google/callback"
-export GEMINI_API_KEY="AIzaSyCHPpG55-utIIm063_EzTgD7FRZjfftd0s"
+export GEMINI_API_KEY="AIzaDFDejemplopG55-utIIm063_EzTfdfgrfftd0s"
 
 # Verificar que las variables se configuraron correctamente
 check_env_var() {

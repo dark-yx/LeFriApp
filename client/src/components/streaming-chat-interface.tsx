@@ -4,6 +4,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent } from '@/components/ui/card';
 import { Bot, User, Send, Loader2 } from 'lucide-react';
 import { useAuth } from '@/hooks/use-auth';
+import { useLanguage } from '@/contexts/LanguageContext';
 import { useTranslations } from '@/lib/i18n';
 
 interface ChatMessage {
@@ -25,24 +26,21 @@ const formatMarkdown = (text: string) => {
 };
 
 export function StreamingChatInterface({ country }: StreamingChatInterfaceProps) {
-  const { user } = useAuth();
-  const t = useTranslations(user?.language as 'en' | 'es' || 'es');
-  const [messages, setMessages] = useState<ChatMessage[]>([]);
+  const { language } = useLanguage();
+  const t = useTranslations(language);
+  
+  const [messages, setMessages] = useState<ChatMessage[]>([
+    {
+      id: 'welcome',
+      content: t.welcomeMessage,
+      sender: 'ai',
+      timestamp: new Date(),
+    }
+  ]);
   const [inputValue, setInputValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
-
-  // Actualizar el mensaje de bienvenida cuando cambia el idioma
-  useEffect(() => {
-    setMessages([
-      {
-        id: 'welcome',
-        content: t.welcomeMessage,
-        sender: 'ai',
-        timestamp: new Date(),
-      }
-    ]);
-  }, [t.welcomeMessage]);
+  const { user } = useAuth();
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -84,7 +82,7 @@ export function StreamingChatInterface({ country }: StreamingChatInterfaceProps)
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'x-user-id': user?._id?.toString() || '66a1b2c3d4e5f6789abc1234',
+          'x-user-id': user?._id || '66a1b2c3d4e5f6789abc1234',
         },
         body: JSON.stringify({
           query: userMessage.content,
@@ -132,7 +130,7 @@ export function StreamingChatInterface({ country }: StreamingChatInterfaceProps)
                 } else if (data.type === 'error') {
                   setMessages(prev => prev.map(msg => 
                     msg.id === aiMessageId 
-                      ? { ...msg, content: t.error }
+                      ? { ...msg, content: 'Lo siento, hubo un error procesando tu consulta. Por favor intenta de nuevo.' }
                       : msg
                   ));
                 }
@@ -147,7 +145,7 @@ export function StreamingChatInterface({ country }: StreamingChatInterfaceProps)
       console.error('Error:', error);
       setMessages(prev => prev.map(msg => 
         msg.id === aiMessageId 
-          ? { ...msg, content: t.error }
+          ? { ...msg, content: 'Lo siento, hubo un error procesando tu consulta. Por favor intenta de nuevo.' }
           : msg
       ));
     } finally {
@@ -163,10 +161,10 @@ export function StreamingChatInterface({ country }: StreamingChatInterfaceProps)
   };
 
   const quickQuestions = [
-    t.quickQuestion1,
-    t.quickQuestion2,
-    t.quickQuestion3,
-    t.quickQuestion4
+    "What are my basic labor rights?",
+    "How can I start a divorce process?",
+    "What should I do if I'm not being paid my salary?",
+    "What are tenant rights?"
   ];
 
   return (
@@ -176,9 +174,9 @@ export function StreamingChatInterface({ country }: StreamingChatInterfaceProps)
         {messages.length === 0 && (
           <div className="text-center py-8">
             <Bot className="w-12 h-12 mx-auto mb-4 text-primary" />
-            <h3 className="text-lg font-semibold mb-2">{t.legalAssistantWelcome}</h3>
+            <h3 className="text-lg font-semibold mb-2">¡Hola! Soy tu asistente legal</h3>
             <p className="text-muted-foreground mb-6">
-              {t.legalAssistantDescription}
+              Puedes preguntarme sobre derechos, procedimientos legales o cualquier consulta jurídica.
             </p>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-2 max-w-2xl mx-auto">
               {quickQuestions.map((question, index) => (
@@ -227,15 +225,15 @@ export function StreamingChatInterface({ country }: StreamingChatInterfaceProps)
                 />
                 {message.sender === 'ai' && message.confidence && (
                   <div className="mt-2 text-xs text-muted-foreground">
-                    {t.confidence}: {Math.round(message.confidence * 100)}%
+                    Confianza: {Math.round(message.confidence * 100)}%
                   </div>
                 )}
                 {message.citations && message.citations.length > 0 && (
                   <div className="mt-2 space-y-1">
-                    <div className="text-xs font-medium">{t.sources}:</div>
+                    <div className="text-xs font-medium">Fuentes:</div>
                     {message.citations.map((citation, index) => (
                       <div key={index} className="text-xs text-muted-foreground">
-                        • {citation.title} ({citation.relevance}% {t.relevance})
+                        • {citation.title} ({citation.relevance}% relevancia)
                       </div>
                     ))}
                   </div>
@@ -254,7 +252,7 @@ export function StreamingChatInterface({ country }: StreamingChatInterfaceProps)
               <CardContent className="p-3">
                 <div className="flex items-center gap-2 text-sm text-muted-foreground">
                   <Loader2 className="w-4 h-4 animate-spin" />
-                  {t.thinking}
+                  Pensando...
                 </div>
               </CardContent>
             </Card>
@@ -271,7 +269,7 @@ export function StreamingChatInterface({ country }: StreamingChatInterfaceProps)
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
             onKeyPress={handleKeyPress}
-            placeholder={t.typeQuestion}
+            placeholder="Escribe tu consulta legal..."
             className="min-h-[60px] max-h-[120px] resize-none"
             disabled={isLoading}
           />

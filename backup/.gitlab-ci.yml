@@ -1,0 +1,83 @@
+image: node:18
+
+variables:
+  # Google Cloud Platform
+  GCP_PROJECT_ID: "lefri-platform"
+  GCP_REGION: "us-central1"
+  CONTAINER_REGISTRY: gcr.io/lefri-ai
+  SERVICE_NAME: lefri-app
+
+stages:
+  - test
+  - build
+  - deploy
+
+# Cache dependencies
+cache:
+  paths:
+    - node_modules/
+
+before_script:
+  - apt-get update && apt-get install -y curl gnupg
+  - curl -fsSL https://deb.nodesource.com/setup_18.x | bash -
+  - apt-get install -y nodejs
+  - npm install -g pnpm
+  - pnpm install
+  - |
+    # Decode base64 variables
+    export MONGODB_URI=$(echo $MONGODB_URI_BASE64 | base64 -d)
+    export GOOGLE_OAUTH_CLIENT_ID=$(echo $GOOGLE_OAUTH_CLIENT_ID_BASE64 | base64 -d)
+    export GOOGLE_OAUTH_CLIENT_SECRET=$(echo $GOOGLE_OAUTH_CLIENT_SECRET_BASE64 | base64 -d)
+    export GEMINI_API_KEY=$(echo $GEMINI_API_KEY_BASE64 | base64 -d)
+
+# Testing stage
+test:
+  stage: test
+  script:
+    - pnpm test
+  only:
+    - main
+    - develop
+
+# Build stage
+build:
+  stage: build
+  script:
+    - pnpm build
+  artifacts:
+    paths:
+      - dist/
+  only:
+    - main
+    - develop
+
+# Deploy to development
+deploy_dev:
+  stage: deploy
+  script:
+    - chmod +x scripts/setup-env.sh
+    - chmod +x scripts/fix-deploy.sh
+    - chmod +x scripts/deploy.sh
+    - ./scripts/setup-env.sh
+    - ./scripts/fix-deploy.sh
+    - ./scripts/deploy.sh
+  environment:
+    name: development
+  only:
+    - develop
+
+# Deploy to staging
+deploy_prod:
+  stage: deploy
+  script:
+    - chmod +x scripts/setup-env.sh
+    - chmod +x scripts/fix-deploy.sh
+    - chmod +x scripts/deploy.sh
+    - ./scripts/setup-env.sh
+    - ./scripts/fix-deploy.sh
+    - ./scripts/deploy.sh
+  environment:
+    name: production
+  only:
+    - main
+  when: manual

@@ -1,67 +1,7 @@
-# Environment variables
-.env
-.env.local
-.env.*.local
-local-env.sh
-setup-env.sh
-
-# Dependencies
-node_modules/
-.pnp/
-.pnp.js
-
-# Build outputs
-dist/
-build/
-out/
-.next/
-
-# Logs
-logs/
-*.log
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-
-# Runtime data
-pids/
-*.pid
-*.seed
-*.pid.lock
-
-# Testing
-coverage/
-
-# IDE
-.idea/
-.vscode/
-*.swp
-*.swo
-
-# OS
+node_modules
+dist
 .DS_Store
-Thumbs.db
-
-# Debug
-.debug/
-
-# Temporary files
-*.tmp
-*.temp
-.cache/
-
-# Service account keys
-*-service-account.json
-service-account.json
-gcp-key.json
-
-# Local development
-*.local
-
 server/public
 vite.config.ts.*
 *.tar.gz
-
-# Deployment scripts
-scripts/fix-deploy.sh
-scripts/deploy.sh
+.env

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState, useEffect } from 'react';
 
 // Comprehensive translation system for LeFriAI - English first
 export const translations = {
@@ -61,7 +61,6 @@ export const translations = {
     consultationHistory: "Consultation History",
     newConsultation: "New Consultation",
     searchPlaceholder: "Search your consultations...",
-    thinking: "Thinking...",
     legalAssistant: "Legal Assistant",
     confidence: "Confidence",
     sources: "Sources",
@@ -216,8 +215,6 @@ export const translations = {
     quickQuestion2: "How can I start a divorce process?",
     quickQuestion3: "What should I do if I'm not being paid my salary?",
     quickQuestion4: "What are tenant rights?",
-    thinkingIndicator: "Thinking...",
-    inputPlaceholder: "Type your legal question...",
     legalResources: "Legal Resources",
     constitution: "National Constitution",
     civilCode: "Civil Code",
@@ -284,7 +281,6 @@ export const translations = {
     consultationHistory: "Historial de Consultas",
     newConsultation: "Nueva Consulta",
     searchPlaceholder: "Busca en tus consultas...",
-    thinking: "Pensando...",
     legalAssistant: "Asistente Legal",
     confidence: "Confianza",
     sources: "Fuentes",
@@ -436,34 +432,45 @@ export const translations = {
     legalAssistantWelcome: "¡Hola! Soy tu asistente legal",
     legalAssistantDescription: "Puedes preguntarme sobre derechos, procedimientos legales o cualquier consulta jurídica.",
     quickQuestion1: "¿Cuáles son mis derechos laborales básicos?",
-    quickQuestion2: "¿Cómo puedo iniciar un proceso de divorcio?",
+    quickQuestion2: "¿Cómo inicio un proceso de divorcio?",
     quickQuestion3: "¿Qué debo hacer si no me pagan el sueldo?",
     quickQuestion4: "¿Cuáles son los derechos del inquilino?",
-    thinkingIndicator: "Pensando...",
-    inputPlaceholder: "Escribe tu consulta legal...",
     legalResources: "Recursos Legales",
     constitution: "Constitución Nacional",
     civilCode: "Código Civil",
-    updated: "Actualizado",
+    updated: "Actualizada",
     noActivity: "Aún no hay consultas. Comienza haciendo una pregunta legal."
   }
 };
 
-export type Language = 'en' | 'es';
+export type Language = keyof typeof translations;
 export type TranslationKey = keyof typeof translations.en;
 
-export function useTranslations(lang: Language = 'es') {
-  const [currentLang, setCurrentLang] = useState<Language>(lang);
+// Hook to use translations - English as default
+export function useTranslations(language: string = 'en') {
+  const [currentTranslations, setCurrentTranslations] = useState(translations[language as Language] || translations.en);
 
   useEffect(() => {
-    setCurrentLang(lang);
-  }, [lang]);
+    setCurrentTranslations(translations[language as Language] || translations.en);
+  }, [language]);
 
-  return translations[currentLang];
+  useEffect(() => {
+    const handleLanguageChange = (event: CustomEvent) => {
+      setCurrentTranslations(translations[event.detail.language as Language] || translations.en);
+    };
+
+    window.addEventListener('languageChanged', handleLanguageChange as EventListener);
+    return () => {
+      window.removeEventListener('languageChanged', handleLanguageChange as EventListener);
+    };
+  }, []);
+
+  return currentTranslations;
 }
 
-export function getTranslation(key: TranslationKey, lang: Language = 'es'): string {
-  return translations[lang][key] || translations['es'][key] || key;
+export function getTranslation(key: TranslationKey, language: string = 'en'): string {
+  const t = translations[language as Language] || translations.en;
+  return t[key] || key;
 }
 
 export default translations;

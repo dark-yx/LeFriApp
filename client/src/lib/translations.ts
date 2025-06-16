@@ -97,6 +97,17 @@ export interface Translations {
   filter: string;
   clear: string;
   refresh: string;
+
+  // Legal Consultation
+  quickQuestion1: string;
+  quickQuestion2: string;
+  quickQuestion3: string;
+  quickQuestion4: string;
+  legalResources: string;
+  constitution: string;
+  civilCode: string;
+  updated: string;
+  noActivity: string;
 }
 
 const translations: Record<string, Translations> = {
@@ -198,6 +209,17 @@ const translations: Record<string, Translations> = {
     filter: "Filtrar",
     clear: "Limpiar",
     refresh: "Actualizar",
+
+    // Legal Consultation
+    quickQuestion1: "¿Cuáles son mis derechos laborales básicos?",
+    quickQuestion2: "¿Cómo puedo iniciar un proceso de divorcio?",
+    quickQuestion3: "¿Qué debo hacer si no recibo mi salario?",
+    quickQuestion4: "¿Cuáles son los derechos del inquilino?",
+    legalResources: "Recursos Legales",
+    constitution: "Constitución Nacional",
+    civilCode: "Código Civil",
+    updated: "Actualizado",
+    noActivity: "Aún no hay consultas. Comience preguntando una pregunta legal.",
   },
 
   en: {
@@ -298,6 +320,17 @@ const translations: Record<string, Translations> = {
     filter: "Filter",
     clear: "Clear",
     refresh: "Refresh",
+
+    // Legal Consultation
+    quickQuestion1: "What are my basic labor rights?",
+    quickQuestion2: "How can I start a divorce process?",
+    quickQuestion3: "What should I do if I'm not being paid my salary?",
+    quickQuestion4: "What are tenant rights?",
+    legalResources: "Legal Resources",
+    constitution: "National Constitution",
+    civilCode: "Civil Code",
+    updated: "Updated",
+    noActivity: "No consultations yet. Start by asking a legal question.",
   },
 
   pt: {
@@ -378,6 +411,17 @@ const translations: Record<string, Translations> = {
     filter: "Filtrar",
     clear: "Limpar",
     refresh: "Atualizar",
+
+    // Legal Consultation
+    quickQuestion1: "¿Cuáles son mis derechos laborales básicos?",
+    quickQuestion2: "¿Cómo puedo iniciar un proceso de divorcio?",
+    quickQuestion3: "¿Qué debo hacer si no recibo mi salario?",
+    quickQuestion4: "¿Cuáles son los derechos del inquilino?",
+    legalResources: "Recursos Legales",
+    constitution: "Constitución Nacional",
+    civilCode: "Código Civil",
+    updated: "Actualizado",
+    noActivity: "Aún no hay consultas. Comience preguntando una pregunta legal.",
   },
 
   fr: {
@@ -458,6 +502,17 @@ const translations: Record<string, Translations> = {
     filter: "Filtrer",
     clear: "Effacer",
     refresh: "Actualiser",
+
+    // Legal Consultation
+    quickQuestion1: "What are my basic labor rights?",
+    quickQuestion2: "How can I start a divorce process?",
+    quickQuestion3: "What should I do if I'm not being paid my salary?",
+    quickQuestion4: "What are tenant rights?",
+    legalResources: "Legal Resources",
+    constitution: "National Constitution",
+    civilCode: "Civil Code",
+    updated: "Updated",
+    noActivity: "No consultations yet. Start by asking a legal question.",
   }
 };
 
