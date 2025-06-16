@@ -11,3 +11,6 @@ npm-debug.log
 coverage
 tmp
 dist
+ai-docs
+attached_assets
+.env.local
