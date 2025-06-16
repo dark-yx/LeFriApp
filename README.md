@@ -28,6 +28,10 @@ Our goal is to break down barriers to legal assistance and ensure that everyone 
   - WhatsApp Business API
   - Email Services
   - Voice Services
+- **Deployment**:
+  - Google Cloud Run
+  - Google Cloud Build
+  - Docker
 
 ## 📦 Project Structure
 
@@ -45,6 +49,11 @@ LeFriPlatform/
 │   ├── services/         # External services
 │   ├── storage/          # Persistence layer
 │   └── types/            # TypeScript types
+├── scripts/              # Deployment and setup scripts
+│   ├── deploy.sh         # Production deployment script
+│   ├── setup-env.sh      # Environment setup script
+│   ├── local-env.sh      # Local environment script
+│   └── setup-local-env.sh # Local environment setup
 └── shared/               # Shared code
 ```
 
@@ -63,71 +72,65 @@ npm install
 
 3. Configure environment variables:
 
-In the root directory, create `.env`:
-```env
-# Google OAuth Configuration
-GOOGLE_OAUTH_CLIENT_ID=your_google_client_id
-GOOGLE_OAUTH_CLIENT_SECRET=your_google_client_secret
-GOOGLE_OAUTH_REDIRECT_URI=http://localhost:5000/api/auth/google/callback
+### Local Development
 
-# Database Configuration
-MONGODB_URI=your_mongodb_uri
-SESSION_SECRET=your_secure_secret
+1. Set up local environment:
+```bash
+# Export environment variables
+export MONGODB_URI="your_mongodb_uri"
+export GOOGLE_OAUTH_CLIENT_ID="your_google_client_id"
+export GOOGLE_OAUTH_CLIENT_SECRET="your_google_client_secret"
+export GOOGLE_OAUTH_REDIRECT_URI="http://localhost:5000/api/auth/google/callback"
+export GEMINI_API_KEY="your_gemini_api_key"
 
-# Google Gemini AI Configuration
-GOOGLE_GEMINI_API_KEY=your_gemini_api_key
-
-# WhatsApp Business API Configuration
-WHATSAPP_API_KEY=your_whatsapp_api_key
-WHATSAPP_PHONE_NUMBER_ID=your_whatsapp_phone_number_id
-WHATSAPP_BUSINESS_ACCOUNT_ID=your_whatsapp_business_account_id
-
-# Email Service Configuration
-SMTP_HOST=your_smtp_host
-SMTP_PORT=your_smtp_port
-SMTP_USER=your_smtp_user
-SMTP_PASSWORD=your_smtp_password
-EMAIL_FROM=your_email_address
-
-# Voice Service Configuration
-VOICE_API_KEY=your_voice_api_key
-VOICE_API_SECRET=your_voice_api_secret
+# Or use the setup script
+./scripts/setup-local-env.sh
 ```
 
-4. Configure API Services:
-   - **Google Gemini AI**:
-     - Go to [Google AI Studio](https://makersuite.google.com/app/apikey)
-     - Create a new API key
-     - Add the API key to your `.env` file
-
-   - **WhatsApp Business API**:
-     - Go to [Meta for Developers](https://developers.facebook.com/)
-     - Create a WhatsApp Business account
-     - Set up your WhatsApp Business API
-     - Add the credentials to your `.env` file
-
-   - **Email Service**:
-     - Set up an SMTP server (e.g., Gmail, SendGrid, etc.)
-     - Add the SMTP credentials to your `.env` file
-
-   - **Voice Service**:
-     - Set up your preferred voice service provider
-     - Add the voice service credentials to your `.env` file
-
-5. Configure Google OAuth:
-   - Go to [Google Cloud Console](https://console.cloud.google.com)
-   - Create a new project or select an existing one
-   - Enable Google OAuth 2.0 API
-   - Create OAuth 2.0 credentials
-   - Add the following authorized URI:
-     - `http://localhost:5000`
-   - Add the following JavaScript origin:
-     - `http://localhost:5000`
-
-6. Start the development server:
+2. Start development server:
 ```bash
 npm run dev
 ```
+
+### Production Deployment
+
+1. Configure production environment:
+```bash
+./scripts/setup-env.sh
+```
+
+2. Deploy to Google Cloud Run:
+```bash
+./scripts/deploy.sh
+```
+
+## 🔧 Environment Variables
+
+### Required Variables
+- `MONGODB_URI`: MongoDB connection string
+- `GOOGLE_OAUTH_CLIENT_ID`: Google OAuth client ID
+- `GOOGLE_OAUTH_CLIENT_SECRET`: Google OAuth client secret
+- `GOOGLE_OAUTH_REDIRECT_URI`: OAuth redirect URI
+- `GEMINI_API_KEY`: Google Gemini AI API key
+
+### CI/CD Variables (GitLab)
+- `MONGODB_URI_BASE64`: Base64 encoded MongoDB URI
+- `GOOGLE_OAUTH_CLIENT_ID_BASE64`: Base64 encoded Google OAuth client ID
+- `GOOGLE_OAUTH_CLIENT_SECRET_BASE64`: Base64 encoded Google OAuth client secret
+- `GEMINI_API_KEY_BASE64`: Base64 encoded Gemini API key
+- `GOOGLE_OAUTH_REDIRECT_URI`: OAuth redirect URI
+
+## 🚀 Deployment
+
+### Local Development
+1. Configure local environment using `setup-local-env.sh`
+2. Start development server with `npm run dev`
+3. Access application at `http://localhost:5000`
+
+### Production Deployment
+1. Configure production environment using `setup-env.sh`
+2. Deploy to Google Cloud Run using `deploy.sh`
+3. Access application at the provided Cloud Run URL
 
 ## 🔑 Authentication
 
@@ -135,7 +138,7 @@ The application uses Google OAuth 2.0 for authentication. To ensure proper funct
 
 1. Make sure environment variables are correctly configured
 2. Verify redirect URI is set up in Google Cloud Console
-3. The client ID must be correctly configured in the `.env` file
+3. The client ID must be correctly configured in the environment variables
 
 ## 🚨 Troubleshooting
 
@@ -160,9 +163,14 @@ If you encounter the "Invalid server response" error:
    - Ensure redirect URI is correctly configured
 
 3. **API Integration Issues**:
-   - Verify all API keys are correctly set in `.env`
+   - Verify all API keys are correctly set
    - Check API service status and quotas
    - Ensure proper API permissions are granted
+
+4. **Deployment Issues**:
+   - Check Cloud Run logs for errors
+   - Verify environment variables in Cloud Run
+   - Ensure proper IAM permissions
 
 ## 📝 Available Scripts
 
@@ -170,6 +178,9 @@ If you encounter the "Invalid server response" error:
 - `npm run build`: Build for production
 - `npm run start`: Start production server
 - `npm run check`: TypeScript type checking
+- `./scripts/setup-env.sh`: Configure production environment
+- `./scripts/deploy.sh`: Deploy to Google Cloud Run
+- `./scripts/setup-local-env.sh`: Configure local environment
 
 ## 🔒 Security
 
@@ -180,6 +191,8 @@ If you encounter the "Invalid server response" error:
 - Input sanitization
 - API key protection
 - Environment variable security
+- Base64 encoding for sensitive data
+- Secure deployment with Google Cloud Run
 
 ## 📄 License
 

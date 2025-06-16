@@ -4,6 +4,23 @@ import path from 'path';
 
 export default defineConfig({
   plugins: [react()],
+  root: path.resolve(import.meta.dirname),
+  build: {
+    outDir: path.resolve(import.meta.dirname, "..", "dist", "public"),
+    emptyOutDir: true,
+    assetsDir: "assets",
+    manifest: true,
+    rollupOptions: {
+      input: {
+        main: path.resolve(import.meta.dirname, "index.html"),
+      },
+      output: {
+        manualChunks: {
+          vendor: ['react', 'react-dom'],
+        },
+      },
+    },
+  },
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
@@ -16,6 +33,10 @@ export default defineConfig({
         target: 'http://localhost:5000',
         changeOrigin: true,
       },
+    },
+    fs: {
+      strict: true,
+      deny: ["**/.*"],
     },
   },
   define: {

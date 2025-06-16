@@ -17,17 +17,25 @@ if [ ! -f "package.json" ]; then
     exit 1
 fi
 
-# Configurar variables de entorno
-export MONGODB_URI="mongodb+srv://jejemplo:EJEMPLO.11jp11@lefri-ai.vbdfdd.mongodb.net/?retryWrites=true&w=majority&appName=LeFri-AI"
-export GOOGLE_OAUTH_CLIENT_ID="935434597-nb4uke2c4kqtdejemplonrpk0u.apps.googleusercontent.com"
-export GOOGLE_OAUTH_CLIENT_SECRET="GSDSPX-Oc5ejemploYTRRR6l2hlO_YBj-mb"
-export GOOGLE_OAUTH_REDIRECT_URI="http://localhost:5000/api/auth/google/callback"
-export GEMINI_API_KEY="AIzaDFDejemplopG55-utIIm063_EzTfdfgrfftd0s"
+# Verificar si existe el archivo .env.local
+if [ ! -f .env.local ]; then
+    echo -e "${RED}Error: No se encontró el archivo .env.local${NC}"
+    echo -e "${YELLOW}Por favor, crea un archivo .env.local con las siguientes variables:${NC}"
+    echo "MONGODB_URI=tu_uri_mongodb"
+    echo "GOOGLE_OAUTH_CLIENT_ID=tu_client_id"
+    echo "GOOGLE_OAUTH_CLIENT_SECRET=tu_client_secret"
+    echo "GOOGLE_OAUTH_REDIRECT_URI=http://localhost:5000/api/auth/google/callback"
+    echo "GEMINI_API_KEY=tu_api_key"
+    exit 1
+fi
+
+# Cargar variables desde .env.local
+source .env.local
 
 # Verificar que las variables se configuraron correctamente
 check_env_var() {
     if [ -z "${!1}" ]; then
-        echo -e "${RED}Error: La variable $1 no está configurada${NC}"
+        echo -e "${RED}Error: La variable $1 no está configurada en .env.local${NC}"
         exit 1
     else
         echo -e "${GREEN}✓ Variable $1 configurada${NC}"

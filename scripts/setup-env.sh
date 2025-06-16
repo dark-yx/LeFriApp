@@ -11,39 +11,90 @@ NC='\033[0m'
 
 echo -e "${YELLOW}Configurando entorno de producción...${NC}"
 
-# Verificar variables de entorno críticas
-check_env_var() {
-    if [ -z "${!1}" ]; then
-        echo -e "${RED}Error: La variable $1 no está definida${NC}"
-        exit 1
+# Verificar si ya existe el archivo .env.deploy
+if [ -f .env.deploy ]; then
+    echo -e "${YELLOW}El archivo .env.deploy ya existe. ¿Deseas sobrescribirlo? (s/n)${NC}"
+    read -r respuesta
+    if [ "$respuesta" != "s" ]; then
+        echo -e "${GREEN}Operación cancelada.${NC}"
+        exit 0
+    fi
+fi
+
+# Función para verificar si una variable está definida
+check_var() {
+    if [ -n "${!1}" ]; then
+        return 0
     else
-        echo -e "${GREEN}✓ Variable $1 configurada${NC}"
+        return 1
     fi
 }
 
-# Verificar variables requeridas
-check_env_var "GCP_SERVICE_ACCOUNT_KEY"
-check_env_var "MONGODB_URI_BASE64"
-check_env_var "GOOGLE_OAUTH_CLIENT_ID_BASE64"
-check_env_var "GOOGLE_OAUTH_CLIENT_SECRET_BASE64"
-check_env_var "GOOGLE_OAUTH_REDIRECT_URI"
-check_env_var "GEMINI_API_KEY_BASE64"
+# Verificar si estamos en CI/CD de GitLab
+if [ -n "$CI" ]; then
+    echo -e "${YELLOW}Detectado entorno CI/CD de GitLab${NC}"
+    
+    # Verificar variables de CI/CD
+    if [ -z "$MONGODB_URI_BASE64" ] || [ -z "$GOOGLE_OAUTH_CLIENT_ID_BASE64" ] || \
+       [ -z "$GOOGLE_OAUTH_CLIENT_SECRET_BASE64" ] || [ -z "$GEMINI_API_KEY_BASE64" ]; then
+        echo -e "${RED}Error: Faltan variables de CI/CD necesarias${NC}"
+        exit 1
+    fi
+    
+    # Crear .env.deploy con las variables de CI/CD
+    cat > .env.deploy << EOF
+MONGODB_URI_BASE64=$MONGODB_URI_BASE64
+GOOGLE_OAUTH_CLIENT_ID_BASE64=$GOOGLE_OAUTH_CLIENT_ID_BASE64
+GOOGLE_OAUTH_CLIENT_SECRET_BASE64=$GOOGLE_OAUTH_CLIENT_SECRET_BASE64
+GEMINI_API_KEY_BASE64=$GEMINI_API_KEY_BASE64
+EOF
+else
+    # Verificar si las variables ya están exportadas
+    if check_var "MONGODB_URI" && check_var "GOOGLE_OAUTH_CLIENT_ID" && \
+       check_var "GOOGLE_OAUTH_CLIENT_SECRET" && check_var "GEMINI_API_KEY"; then
+        echo -e "${YELLOW}Detectadas variables de entorno exportadas${NC}"
+        
+        # Codificar variables en base64
+        MONGODB_URI_BASE64=$(echo -n "$MONGODB_URI" | base64)
+        GOOGLE_OAUTH_CLIENT_ID_BASE64=$(echo -n "$GOOGLE_OAUTH_CLIENT_ID" | base64)
+        GOOGLE_OAUTH_CLIENT_SECRET_BASE64=$(echo -n "$GOOGLE_OAUTH_CLIENT_SECRET" | base64)
+        GEMINI_API_KEY_BASE64=$(echo -n "$GEMINI_API_KEY" | base64)
 
-# Decodificar variables base64
-echo -e "${YELLOW}Decodificando variables de entorno...${NC}"
-export MONGODB_URI=$(echo $MONGODB_URI_BASE64 | base64 -d)
-export GOOGLE_OAUTH_CLIENT_ID=$(echo $GOOGLE_OAUTH_CLIENT_ID_BASE64 | base64 -d)
-export GOOGLE_OAUTH_CLIENT_SECRET=$(echo $GOOGLE_OAUTH_CLIENT_SECRET_BASE64 | base64 -d)
-export GEMINI_API_KEY=$(echo $GEMINI_API_KEY_BASE64 | base64 -d)
+        # Guardar variables en archivo .env.deploy
+        cat > .env.deploy << EOF
+MONGODB_URI_BASE64=$MONGODB_URI_BASE64
+GOOGLE_OAUTH_CLIENT_ID_BASE64=$GOOGLE_OAUTH_CLIENT_ID_BASE64
+GOOGLE_OAUTH_CLIENT_SECRET_BASE64=$GOOGLE_OAUTH_CLIENT_SECRET_BASE64
+GEMINI_API_KEY_BASE64=$GEMINI_API_KEY_BASE64
+EOF
+    else
+        # Modo interactivo para desarrollo local
+        echo -e "${YELLOW}Modo interactivo para desarrollo local${NC}"
+        
+        # Solicitar variables de entorno
+        echo -e "${YELLOW}Ingresa la URI de MongoDB:${NC}"
+        read -r mongodb_uri
+        echo -e "${YELLOW}Ingresa el Client ID de Google OAuth:${NC}"
+        read -r google_client_id
+        echo -e "${YELLOW}Ingresa el Client Secret de Google OAuth:${NC}"
+        read -r google_client_secret
+        echo -e "${YELLOW}Ingresa la API Key de Gemini:${NC}"
+        read -r gemini_api_key
 
-# Configurar Google Cloud
-echo -e "${YELLOW}Configurando Google Cloud...${NC}"
-echo $GCP_SERVICE_ACCOUNT_KEY | base64 -d > /tmp/gcp-key.json
-gcloud auth activate-service-account --key-file=/tmp/gcp-key.json
-gcloud config set project $GCP_PROJECT_ID
+        # Codificar variables en base64
+        MONGODB_URI_BASE64=$(echo -n "$mongodb_uri" | base64)
+        GOOGLE_OAUTH_CLIENT_ID_BASE64=$(echo -n "$google_client_id" | base64)
+        GOOGLE_OAUTH_CLIENT_SECRET_BASE64=$(echo -n "$google_client_secret" | base64)
+        GEMINI_API_KEY_BASE64=$(echo -n "$gemini_api_key" | base64)
 
-# Limpiar archivos sensibles
-echo -e "${YELLOW}Limpiando archivos sensibles...${NC}"
-rm -f /tmp/gcp-key.json
+        # Guardar variables en archivo .env.deploy
+        cat > .env.deploy << EOF
+MONGODB_URI_BASE64=$MONGODB_URI_BASE64
+GOOGLE_OAUTH_CLIENT_ID_BASE64=$GOOGLE_OAUTH_CLIENT_ID_BASE64
+GOOGLE_OAUTH_CLIENT_SECRET_BASE64=$GOOGLE_OAUTH_CLIENT_SECRET_BASE64
+GEMINI_API_KEY_BASE64=$GEMINI_API_KEY_BASE64
+EOF
+    fi
+fi
 
-echo -e "${GREEN}✓ Entorno de producción configurado exitosamente${NC}"
+echo -e "${GREEN}Variables de entorno configuradas correctamente en .env.deploy${NC}"

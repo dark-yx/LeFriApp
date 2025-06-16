@@ -20,6 +20,10 @@ LeFri Platform is a comprehensive legal assistance platform that leverages artif
   - Tailwind CSS
   - Radix UI Components
   - Framer Motion for animations
+- **Deployment**:
+  - Google Cloud Run
+  - Google Cloud Build
+  - Docker
 
 ### 2.2 Key Dependencies
 ```json
@@ -38,6 +42,11 @@ LeFri Platform is a comprehensive legal assistance platform that leverages artif
     "express": "^4.21.2",
     "mongoose": "^8.15.1",
     "puppeteer": "^24.10.0"
+  },
+  "Deployment": {
+    "docker": "latest",
+    "google-cloud-build": "latest",
+    "google-cloud-run": "latest"
   }
 }
 ```
@@ -89,6 +98,11 @@ The platform implements a sophisticated multi-agent system that includes:
    - Email service
    - Voice service
 
+5. **Deployment Services**
+   - Google Cloud Run hosting
+   - Google Cloud Build CI/CD
+   - Docker containerization
+
 ## 4. Data Flow
 
 ### 4.1 User Authentication Flow
@@ -112,6 +126,13 @@ The platform implements a sophisticated multi-agent system that includes:
 4. Relevant information is extracted
 5. Processed data is stored and returned
 
+### 4.4 Deployment Flow
+1. Code is pushed to repository
+2. Cloud Build triggers build process
+3. Docker image is created and pushed
+4. Cloud Run deploys new version
+5. Traffic is routed to new deployment
+
 ## 5. Security Implementation
 
 ### 5.1 Authentication Security
@@ -125,6 +146,15 @@ The platform implements a sophisticated multi-agent system that includes:
 - File upload restrictions
 - API endpoint protection
 - Rate limiting implementation
+- Base64 encoding for sensitive data
+- Environment variable protection
+
+### 5.3 Deployment Security
+- Secure container images
+- IAM role-based access
+- Network security policies
+- SSL/TLS encryption
+- Secure environment variables
 
 ## 6. API Endpoints
 
@@ -193,3 +223,72 @@ interface LegalProcess {
 - Chain of thought processing
 - Multi-step reasoning
 - Context-aware responses
+
+## 9. Deployment Configuration
+
+### 9.1 Local Development
+```bash
+# Environment setup
+./scripts/setup-local-env.sh
+
+# Start development server
+npm run dev
+```
+
+### 9.2 Production Deployment
+```bash
+# Environment setup
+./scripts/setup-env.sh
+
+# Deploy to Cloud Run
+./scripts/deploy.sh
+```
+
+### 9.3 CI/CD Configuration
+```yaml
+# GitLab CI/CD variables
+MONGODB_URI_BASE64: <base64_encoded_mongodb_uri>
+GOOGLE_OAUTH_CLIENT_ID_BASE64: <base64_encoded_client_id>
+GOOGLE_OAUTH_CLIENT_SECRET_BASE64: <base64_encoded_client_secret>
+GEMINI_API_KEY_BASE64: <base64_encoded_gemini_key>
+GOOGLE_OAUTH_REDIRECT_URI: <oauth_redirect_uri>
+```
+
+### 9.4 Docker Configuration
+```dockerfile
+# Multi-stage build
+FROM node:20-alpine AS builder
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci --legacy-peer-deps
+COPY . .
+RUN npm run build
+
+FROM node:20-alpine
+WORKDIR /app
+COPY --from=builder /app/dist ./dist
+COPY --from=builder /app/package*.json ./
+COPY --from=builder /app/node_modules ./node_modules
+RUN mkdir -p dist/public/assets
+ENV NODE_ENV=production
+ENV PORT=8080
+EXPOSE 8080
+CMD ["node", "--experimental-specifier-resolution=node", "dist/index.js"]
+```
+
+## 10. Monitoring and Logging
+
+### 10.1 Application Logs
+- Console logging for development
+- Cloud Run logs for production
+- Error tracking and monitoring
+
+### 10.2 Performance Monitoring
+- Response time tracking
+- Resource utilization
+- Error rate monitoring
+
+### 10.3 Security Monitoring
+- Authentication attempts
+- API usage patterns
+- Security event logging

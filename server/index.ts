@@ -53,35 +53,41 @@ app.use((req, res, next) => {
   next();
 });
 
+app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
+  const status = err.status || err.statusCode || 500;
+  const message = err.message || "Internal Server Error";
+  log(`Error: ${message}`);
+  res.status(status).json({ message });
+});
+
 (async () => {
-  const server = await registerRoutes(app);
+  try {
+    const server = await registerRoutes(app);
 
-  app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
-    const status = err.status || err.statusCode || 500;
-    const message = err.message || "Internal Server Error";
+    if (app.get("env") === "development") {
+      await setupVite(app, server);
+    } else {
+      serveStatic(app);
+    }
 
-    res.status(status).json({ message });
-    throw err;
-  });
+    const port = process.env.PORT || 8080;
+    server.listen({
+      port,
+      host: "0.0.0.0",
+    }, () => {
+      log(`Servidor iniciado en el puerto ${port}`);
+    });
 
-  // importantly only setup vite in development and after
-  // setting up all the other routes so the catch-all route
-  // doesn't interfere with the other routes
-  if (app.get("env") === "development") {
-    await setupVite(app, server);
-  } else {
-    serveStatic(app);
+    process.on('SIGTERM', () => {
+      log('Recibida señal SIGTERM, cerrando servidor...');
+      server.close(() => {
+        log('Servidor cerrado');
+        process.exit(0);
+      });
+    });
+
+  } catch (error) {
+    log(`Error al iniciar el servidor: ${error}`);
+    process.exit(1);
   }
-
-  // ALWAYS serve the app on port 5000
-  // this serves both the API and the client.
-  // It is the only port that is not firewalled.
-  const port = process.env.PORT || 8080;
-  server.listen({
-    port,
-    host: "0.0.0.0",
-    reusePort: true,
-  }, () => {
-    log(`serving on port ${port}`);
-  });
 })();

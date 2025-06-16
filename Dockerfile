@@ -1,5 +1,5 @@
 # Etapa de construcción
-FROM node:18-alpine AS builder
+FROM node:20-alpine AS builder
 
 WORKDIR /app
 
@@ -17,7 +17,7 @@ COPY . .
 RUN npm run build
 
 # Etapa de producción
-FROM node:18-alpine
+FROM node:20-alpine
 
 WORKDIR /app
 
@@ -25,6 +25,9 @@ WORKDIR /app
 COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/package*.json ./
 COPY --from=builder /app/node_modules ./node_modules
+
+# Asegurarse de que los directorios necesarios existen
+RUN mkdir -p dist/public/assets
 
 # Configurar variables de entorno
 ENV NODE_ENV=production
@@ -34,4 +37,4 @@ ENV PORT=8080
 EXPOSE 8080
 
 # Comando para iniciar la aplicación
-CMD ["node", "dist/index.js"] 
+CMD ["node", "--experimental-specifier-resolution=node", "dist/index.js"] 
