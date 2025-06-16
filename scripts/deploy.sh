@@ -26,6 +26,7 @@ fi
 [ -z "$GOOGLE_OAUTH_CLIENT_ID_BASE64" ] && handle_error "GOOGLE_OAUTH_CLIENT_ID_BASE64 no está configurada. Ejecuta ./scripts/setup-env.sh"
 [ -z "$GOOGLE_OAUTH_CLIENT_SECRET_BASE64" ] && handle_error "GOOGLE_OAUTH_CLIENT_SECRET_BASE64 no está configurada. Ejecuta ./scripts/setup-env.sh"
 [ -z "$GEMINI_API_KEY_BASE64" ] && handle_error "GEMINI_API_KEY_BASE64 no está configurada. Ejecuta ./scripts/setup-env.sh"
+[ -z "$GOOGLE_OAUTH_REDIRECT_URI" ] && handle_error "GOOGLE_OAUTH_REDIRECT_URI no está configurada. Ejecuta ./scripts/setup-env.sh"
 
 # Configuración del proyecto
 PROJECT_ID="lefri-ai"
@@ -46,7 +47,10 @@ gcloud run deploy ${SERVICE_NAME} \
   --image=${IMAGE_NAME} \
   --allow-unauthenticated \
   --port=8080 \
-  --set-env-vars="NODE_ENV=production,MONGODB_URI=$(echo $MONGODB_URI_BASE64 | base64 -d),GOOGLE_OAUTH_CLIENT_ID=$(echo $GOOGLE_OAUTH_CLIENT_ID_BASE64 | base64 -d),GOOGLE_OAUTH_CLIENT_SECRET=$(echo $GOOGLE_OAUTH_CLIENT_SECRET_BASE64 | base64 -d),GEMINI_API_KEY=$(echo $GEMINI_API_KEY_BASE64 | base64 -d)" \
+  --set-env-vars="NODE_ENV=production,MONGODB_URI=$(echo $MONGODB_URI_BASE64 | base64 -d),GOOGLE_OAUTH_CLIENT_ID=$(echo $GOOGLE_OAUTH_CLIENT_ID_BASE64 | base64 -d),GOOGLE_OAUTH_CLIENT_SECRET=$(echo $GOOGLE_OAUTH_CLIENT_SECRET_BASE64 | base64 -d),GEMINI_API_KEY=$(echo $GEMINI_API_KEY_BASE64 | base64 -d),GOOGLE_OAUTH_REDIRECT_URI=${GOOGLE_OAUTH_REDIRECT_URI}" \
+  --timeout=300 \
+  --memory=512Mi \
+  --cpu=1 \
   || handle_error "Error al desplegar en Cloud Run"
 
 echo -e "${GREEN}Despliegue completado exitosamente!${NC}"

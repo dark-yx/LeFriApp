@@ -25,6 +25,7 @@ WORKDIR /app
 COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/package*.json ./
 COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/client/public ./dist/public
 
 # Asegurarse de que los directorios necesarios existen
 RUN mkdir -p dist/public/assets
@@ -32,6 +33,7 @@ RUN mkdir -p dist/public/assets
 # Configurar variables de entorno
 ENV NODE_ENV=production
 ENV PORT=8080
+ENV HOST=0.0.0.0
 
 # Exponer el puerto
 EXPOSE 8080
