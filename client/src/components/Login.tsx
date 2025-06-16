@@ -7,7 +7,7 @@ const Login: React.FC = () => {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const clientId = process.env.GOOGLE_OAUTH_CLIENT_ID;
-  const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+  const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8080';
 
   const handleGoogleSuccess = async (credentialResponse: any) => {
     try {
