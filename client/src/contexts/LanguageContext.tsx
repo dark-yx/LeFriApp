@@ -1,36 +1,34 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { translations, useTranslations } from '../lib/i18n';
+import { translations } from '@/lib/i18n';
 
 type Language = 'en' | 'es';
 
 interface LanguageContextType {
   language: Language;
   setLanguage: (lang: Language) => void;
-  t: any;
+  t: typeof translations.en;
 }
 
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 
-export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export function LanguageProvider({ children }: { children: React.ReactNode }) {
   const [language, setLanguage] = useState<Language>(() => {
-    const savedLanguage = localStorage.getItem('language');
-    return (savedLanguage as Language) || 'en';
+    const savedLanguage = localStorage.getItem('language') as Language;
+    return savedLanguage || 'es';
   });
 
   useEffect(() => {
     localStorage.setItem('language', language);
     document.documentElement.lang = language;
-    // Forzar re-render de componentes que usan traducciones
-    const event = new CustomEvent('languageChanged', { detail: { language } });
-    window.dispatchEvent(event);
+    
+    // Disparar evento personalizado para notificar cambios de idioma
+    window.dispatchEvent(new CustomEvent('languageChanged', { detail: { language } }));
   }, [language]);
-
-  const t = useTranslations(language);
 
   const value = {
     language,
     setLanguage,
-    t
+    t: translations[language]
   };
 
   return (
@@ -38,12 +36,12 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       {children}
     </LanguageContext.Provider>
   );
-};
+}
 
-export const useLanguage = () => {
+export function useLanguage() {
   const context = useContext(LanguageContext);
   if (context === undefined) {
     throw new Error('useLanguage must be used within a LanguageProvider');
   }
   return context;
-}; 
+} 

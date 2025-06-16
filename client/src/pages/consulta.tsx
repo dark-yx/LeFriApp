@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -6,14 +6,20 @@ import { Navbar } from '@/components/navbar';
 import { StreamingChatInterface } from '@/components/streaming-chat-interface';
 import { useAuth } from '@/hooks/use-auth';
 import { useLanguage } from '@/contexts/LanguageContext';
-import { useTranslations } from '@/lib/i18n';
 import { useLocation } from 'wouter';
 
 export default function Consulta() {
   const [, setLocation] = useLocation();
   const { user } = useAuth();
+  const { t, language, setLanguage } = useLanguage();
   const [selectedCountry, setSelectedCountry] = useState(user?.country || 'EC');
-  const t = useTranslations(user?.language || 'es');
+
+  // Actualizar el idioma cuando cambia el usuario
+  useEffect(() => {
+    if (user?.language) {
+      setLanguage(user.language as 'en' | 'es');
+    }
+  }, [user?.language, setLanguage]);
 
   const countries = [
     { value: 'EC', label: '🇪🇨 Ecuador' },

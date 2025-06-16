@@ -1,96 +1,24 @@
 image: google/cloud-sdk:latest
 
 variables:
-  # Google Cloud Platform
-  GCP_PROJECT_ID: lefri-ai
-  GCP_REGION: us-central1
-  CONTAINER_REGISTRY: gcr.io/lefri-ai
-  SERVICE_NAME: lefri-app
+  PROJECT_ID: lefri-ai
+  SERVICE_NAME: lefri-platform
+  REGION: us-central1
 
 stages:
-  - test
-  - build
   - deploy
 
-# Cache dependencies
-cache:
-  key: ${CI_COMMIT_REF_SLUG}
-  paths:
-    - node_modules/
-    - client/node_modules/
-    - server/node_modules/
-
-before_script:
-  - |
-    # Decode base64 variables
-    export MONGODB_URI=$(echo $MONGODB_URI_BASE64 | base64 -d)
-    export GOOGLE_OAUTH_CLIENT_ID=$(echo $GOOGLE_OAUTH_CLIENT_ID_BASE64 | base64 -d)
-    export GOOGLE_OAUTH_CLIENT_SECRET=$(echo $GOOGLE_OAUTH_CLIENT_SECRET_BASE64 | base64 -d)
-    export GEMINI_API_KEY=$(echo $GEMINI_API_KEY_BASE64 | base64 -d)
-
-# Testing stage
-test:
-  stage: test
-  image: node:latest
-  script:
-    - npm install
-    - npm run check
-    - npm test
-  only:
-    - main
-    - staging
-    - merge_requests
-
-# Build stage
-build:
-  stage: build
-  script:
-    - echo $GCP_SERVICE_ACCOUNT_KEY | base64 -d > /tmp/gcp-key.json
-    - gcloud auth activate-service-account --key-file=/tmp/gcp-key.json
-    - gcloud config set project $GCP_PROJECT_ID
-    - docker build -t $CONTAINER_REGISTRY/$SERVICE_NAME:$CI_COMMIT_SHA .
-    - gcloud auth configure-docker
-    - docker push $CONTAINER_REGISTRY/$SERVICE_NAME:$CI_COMMIT_SHA
-  only:
-    - main
-    - staging
-
-# Deploy to development
-deploy_development:
+deploy:
   stage: deploy
-  environment: development
   script:
+    # Configurar credenciales de Google Cloud
     - echo $GCP_SERVICE_ACCOUNT_KEY | base64 -d > /tmp/gcp-key.json
     - gcloud auth activate-service-account --key-file=/tmp/gcp-key.json
-    - gcloud config set project $GCP_PROJECT_ID
-    - |
-      gcloud builds submit --tag us-central1-docker.pkg.dev/$GCP_PROJECT_ID/lefri-registry/$SERVICE_NAME && \
-      gcloud run deploy $SERVICE_NAME \
-        --image=us-central1-docker.pkg.dev/$GCP_PROJECT_ID/lefri-registry/$SERVICE_NAME \
-        --platform=managed \
-        --region=$GCP_REGION \
-        --allow-unauthenticated \
-        --port=5000 \
-        --set-env-vars="NODE_ENV=production,MONGODB_URI=${MONGODB_URI},GOOGLE_OAUTH_CLIENT_ID=${GOOGLE_OAUTH_CLIENT_ID},GOOGLE_OAUTH_CLIENT_SECRET=${GOOGLE_OAUTH_CLIENT_SECRET},GOOGLE_OAUTH_REDIRECT_URI=${GOOGLE_OAUTH_REDIRECT_URI},GEMINI_API_KEY=${GEMINI_API_KEY},ASSETS_PATH=/app/dist/public/assets"
+    - gcloud config set project $PROJECT_ID
+
+    # Ejecutar script de despliegue
+    - chmod +x ./scripts/deploy.sh
+    - ./scripts/deploy.sh
+
   only:
     - main
-
-# Deploy to staging
-deploy_staging:
-  stage: deploy
-  environment: staging
-  script:
-    - echo $GCP_SERVICE_ACCOUNT_KEY | base64 -d > /tmp/gcp-key.json
-    - gcloud auth activate-service-account --key-file=/tmp/gcp-key.json
-    - gcloud config set project $GCP_PROJECT_ID
-    - |
-      gcloud builds submit --tag us-central1-docker.pkg.dev/$GCP_PROJECT_ID/lefri-registry/$SERVICE_NAME-staging && \
-      gcloud run deploy $SERVICE_NAME-staging \
-        --image=us-central1-docker.pkg.dev/$GCP_PROJECT_ID/lefri-registry/$SERVICE_NAME-staging \
-        --platform=managed \
-        --region=$GCP_REGION \
-        --allow-unauthenticated \
-        --port=5000 \
-        --set-env-vars="NODE_ENV=production,MONGODB_URI=${MONGODB_URI},GOOGLE_OAUTH_CLIENT_ID=${GOOGLE_OAUTH_CLIENT_ID},GOOGLE_OAUTH_CLIENT_SECRET=${GOOGLE_OAUTH_CLIENT_SECRET},GOOGLE_OAUTH_REDIRECT_URI=${GOOGLE_OAUTH_REDIRECT_URI_STAGING},GEMINI_API_KEY=${GEMINI_API_KEY},ASSETS_PATH=/app/dist/public/assets"
-  only:
-    - staging

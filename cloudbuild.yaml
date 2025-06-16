@@ -1,36 +1,71 @@
 steps:
-- name: 'gcr.io/cloud-builders/docker'
-  args: ['build', '-t', 'gcr.io/$PROJECT_ID/lefri-app', '.']
-- name: 'gcr.io/cloud-builders/docker'
-  args: ['push', 'gcr.io/$PROJECT_ID/lefri-app']
-- name: 'gcr.io/cloud-builders/gcloud'
-  args:
-  - 'run'
-  - 'deploy'
-  - 'lefri-app'
-  - '--image'
-  - 'gcr.io/$PROJECT_ID/lefri-app'
-  - '--region'
-  - '${_REGION}'
-  - '--platform'
-  - 'managed'
-  - '--allow-unauthenticated'
-  - '--memory'
-  - '2Gi'
-  - '--cpu'
-  - '2'
-  - '--min-instances'
-  - '1'
-  - '--max-instances'
-  - '10'
-  - '--set-env-vars'
-  - 'NODE_ENV=production,MONGODB_URI=${_MONGODB_URI},GOOGLE_OAUTH_CLIENT_ID=${_GOOGLE_OAUTH_CLIENT_ID},GOOGLE_OAUTH_CLIENT_SECRET=${_GOOGLE_OAUTH_CLIENT_SECRET},GOOGLE_OAUTH_REDIRECT_URI=${_GOOGLE_OAUTH_REDIRECT_URI},GEMINI_API_KEY=${_GEMINI_API_KEY}'
-substitutions:
-  _REGION: us-central1
-  _MONGODB_URI: ${MONGODB_URI}
-  _GOOGLE_OAUTH_CLIENT_ID: ${GOOGLE_OAUTH_CLIENT_ID}
-  _GOOGLE_OAUTH_CLIENT_SECRET: ${GOOGLE_OAUTH_CLIENT_SECRET}
-  _GOOGLE_OAUTH_REDIRECT_URI: ${GOOGLE_OAUTH_REDIRECT_URI}
-  _GEMINI_API_KEY: ${GEMINI_API_KEY}
+  # Limpiar node_modules y package-lock.json
+  - name: 'node:18'
+    entrypoint: npm
+    args: ['cache', 'clean', '--force']
+    id: 'clean-cache'
+
+  # Instalar dependencias
+  - name: 'node:18'
+    entrypoint: npm
+    args: ['install']
+
+  # Instalar dependencias específicas de Rollup para Linux
+  - name: 'node:18'
+    entrypoint: npm
+    args: ['install', '@rollup/rollup-linux-x64-gnu']
+    id: 'install-rollup-deps'
+
+  # Construir la aplicación
+  - name: 'node:18'
+    entrypoint: npm
+    args: ['run', 'build']
+
+  # Construir y subir la imagen de Docker
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build', '-t', 'gcr.io/$PROJECT_ID/$_SERVICE_NAME:$_TAG', '.']
+
+  # Subir la imagen a Container Registry
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'gcr.io/$PROJECT_ID/$_SERVICE_NAME:$_TAG']
+
+  # Desplegar a Cloud Run
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: gcloud
+    args:
+      - 'run'
+      - 'deploy'
+      - '$_SERVICE_NAME'
+      - '--image=gcr.io/$PROJECT_ID/$_SERVICE_NAME:$_TAG'
+      - '--region=$_REGION'
+      - '--platform=managed'
+      - '--allow-unauthenticated'
+      - '--memory=512Mi'
+      - '--cpu=1'
+      - '--min-instances=1'
+      - '--max-instances=10'
+      - '--port=8080'
+      - '--set-env-vars=NODE_ENV=production,MONGODB_URI=$_MONGODB_URI,GOOGLE_OAUTH_CLIENT_ID=$_GOOGLE_OAUTH_CLIENT_ID,GOOGLE_OAUTH_CLIENT_SECRET=$_GOOGLE_OAUTH_CLIENT_SECRET,GOOGLE_OAUTH_REDIRECT_URI=$_GOOGLE_OAUTH_REDIRECT_URI,GEMINI_API_KEY=$_GEMINI_API_KEY'
+
 images:
-- 'gcr.io/$PROJECT_ID/lefri-app'
+  - 'gcr.io/$PROJECT_ID/$_SERVICE_NAME:$_TAG'
+
+substitutions:
+  _SERVICE_NAME: lefri-platform
+  _REGION: us-central1
+  _TAG: ${SHORT_SHA}
+  _MONGODB_URI: ${_MONGODB_URI}
+  _GOOGLE_OAUTH_CLIENT_ID: ${_GOOGLE_OAUTH_CLIENT_ID}
+  _GOOGLE_OAUTH_CLIENT_SECRET: ${_GOOGLE_OAUTH_CLIENT_SECRET}
+  _GOOGLE_OAUTH_REDIRECT_URI: ${_GOOGLE_OAUTH_REDIRECT_URI}
+  _GEMINI_API_KEY: ${_GEMINI_API_KEY}
+
+options:
+  logging: CLOUD_LOGGING_ONLY
+  machineType: 'E2_HIGHCPU_8'
+  dynamicSubstitutions: true
+  env:
+    - 'CLOUDSDK_COMPUTE_REGION=${_REGION}'
+    - 'CLOUDSDK_CORE_PROJECT=${PROJECT_ID}'
+
+timeout: '1800s'

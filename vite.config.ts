@@ -27,6 +27,26 @@ export default defineConfig({
   build: {
     outDir: path.resolve(import.meta.dirname, "dist/public"),
     emptyOutDir: true,
+    sourcemap: process.env.NODE_ENV !== "production",
+    cssCodeSplit: true,
+    minify: 'terser',
+    terserOptions: {
+      compress: {
+        drop_console: true,
+        drop_debugger: true
+      }
+    },
+    rollupOptions: {
+      output: {
+        assetFileNames: (assetInfo) => {
+          if (assetInfo.name === 'style.css') return 'assets/index-[hash].css';
+          if (assetInfo.name === 'index.html') return 'index.html';
+          return 'assets/[name]-[hash][extname]';
+        },
+        chunkFileNames: 'assets/[name]-[hash].js',
+        entryFileNames: 'assets/[name]-[hash].js',
+      },
+    },
   },
   server: {
     fs: {
