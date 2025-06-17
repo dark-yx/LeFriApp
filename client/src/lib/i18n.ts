@@ -154,9 +154,6 @@ export const translations = {
     emergencyVoiceError: "Error sending emergency alert with voice note. Please try again.",
     emergencyVoiceDescription: "Record a voice note explaining your emergency situation. This will be sent along with your location to all your contacts.",
     emergencyVoiceNote: "Emergency Voice Note",
-    startRecording: "Start Recording",
-    pressMicrophoneToRecord: "Press the microphone to record a voice note",
-    maxDuration: "Maximum duration: 1:00",
     sending: "Sending...",
     close: "Close",
     cancel: "Cancel",
@@ -268,17 +265,6 @@ export const translations = {
     legalResources: "Legal Resources",
     updated: "Updated",
     noActivity: "No consultations yet. Start by asking a legal question.",
-
-    // Voice Recorder
-    resume: "Resume",
-    pause: "Pause",
-    stop: "Stop",
-    play: "Play",
-    send: "Send",
-    uploading: "Uploading...",
-    duration: "Duration",
-    recording: "Recording...",
-    recordingPaused: "Recording paused",
   },
 
   es: {
@@ -433,9 +419,6 @@ export const translations = {
     emergencyVoiceError: "Error al enviar alerta con nota de voz. Intenta nuevamente.",
     emergencyVoiceDescription: "Graba una nota de voz explicando tu situación de emergencia. Esta se enviará junto con tu ubicación a todos tus contactos.",
     emergencyVoiceNote: "Nota de Voz de Emergencia",
-    startRecording: "Iniciar Grabación",
-    pressMicrophoneToRecord: "Presiona el micrófono para grabar una nota de voz",
-    maxDuration: "Duración máxima: 1:00",
     sending: "Enviando...",
     close: "Cerrar",
     cancel: "Cancelar",
@@ -546,18 +529,7 @@ export const translations = {
     quickQuestion4: "¿Cuáles son los derechos del inquilino?",
     legalResources: "Recursos Legales",
     updated: "Actualizada",
-    noActivity: "Aún no hay consultas. Comienza haciendo una pregunta legal.",
-
-    // Voice Recorder
-    resume: "Reanudar",
-    pause: "Pausar",
-    stop: "Detener",
-    play: "Reproducir",
-    send: "Enviar",
-    uploading: "Subiendo...",
-    duration: "Duración",
-    recording: "Grabando...",
-    recordingPaused: "Grabación pausada",
+    noActivity: "Aún no hay consultas. Comienza haciendo una pregunta legal."
   }
 };
 

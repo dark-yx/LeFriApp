@@ -3,8 +3,6 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Mic, Square, Play, Pause, Trash2, Send } from 'lucide-react';
-import { useLanguage } from '@/contexts/LanguageContext';
-import { useTranslations } from '@/lib/i18n';
 
 interface VoiceRecorderProps {
   onRecordingComplete?: (audioBlob: Blob) => void;
@@ -29,8 +27,6 @@ export function VoiceRecorder({
   const [duration, setDuration] = useState(0);
   const [isUploading, setIsUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const { language } = useLanguage();
-  const t = useTranslations(language);
 
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
@@ -231,7 +227,7 @@ export function VoiceRecorder({
               className="bg-red-500 hover:bg-red-600 text-white px-6 py-3"
             >
               <Mic className="w-5 h-5 mr-2" />
-              {t.startRecording}
+              Iniciar Grabación
             </Button>
           )}
 
@@ -243,7 +239,7 @@ export function VoiceRecorder({
                 className="px-4 py-2"
               >
                 {isPaused ? <Play className="w-4 h-4" /> : <Pause className="w-4 h-4" />}
-                {isPaused ? t.resume : t.pause}
+                {isPaused ? 'Reanudar' : 'Pausar'}
               </Button>
               
               <Button
@@ -251,7 +247,7 @@ export function VoiceRecorder({
                 className="bg-red-500 hover:bg-red-600 text-white px-4 py-2"
               >
                 <Square className="w-4 h-4 mr-2" />
-                {t.stop}
+                Detener
               </Button>
             </>
           )}
@@ -261,8 +257,8 @@ export function VoiceRecorder({
         {(isRecording || audioBlob) && (
           <div className="space-y-2">
             <div className="flex items-center justify-between text-sm text-gray-600">
-              <span>{t.duration}: {formatDuration(duration)}</span>
-              <span>{t.maxDuration}</span>
+              <span>Duración: {formatDuration(duration)}</span>
+              <span>Máximo: {formatDuration(maxDuration)}</span>
             </div>
             
             <div className="w-full bg-gray-200 rounded-full h-2">
@@ -281,7 +277,7 @@ export function VoiceRecorder({
           <div className="flex items-center justify-center space-x-2 text-red-600">
             <div className="w-3 h-3 bg-red-500 rounded-full animate-pulse" />
             <span className="font-medium">
-              {isPaused ? t.recordingPaused : t.recording}
+              {isPaused ? 'Grabación pausada' : 'Grabando...'}
             </span>
           </div>
         )}
@@ -303,7 +299,7 @@ export function VoiceRecorder({
                 className="px-4 py-2"
               >
                 {isPlaying ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
-                {isPlaying ? t.pause : t.play}
+                {isPlaying ? 'Pausar' : 'Reproducir'}
               </Button>
               
               <Button
@@ -312,7 +308,7 @@ export function VoiceRecorder({
                 className="px-4 py-2 text-red-600 hover:text-red-700"
               >
                 <Trash2 className="w-4 h-4 mr-1" />
-                {t.delete}
+                Eliminar
               </Button>
               
               {!autoUpload && (
@@ -322,7 +318,7 @@ export function VoiceRecorder({
                   className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2"
                 >
                   <Send className="w-4 h-4 mr-1" />
-                  {isUploading ? t.uploading : t.send}
+                  {isUploading ? 'Subiendo...' : 'Enviar'}
                 </Button>
               )}
             </div>
@@ -333,14 +329,14 @@ export function VoiceRecorder({
         {isUploading && (
           <div className="flex items-center justify-center space-x-2 text-blue-600">
             <div className="loader"></div>
-            <span>{t.uploading}</span>
+            <span>Subiendo grabación...</span>
           </div>
         )}
 
         {/* Instructions */}
         <div className="text-center text-xs text-gray-500 mt-4">
-          <p>{t.pressMicrophoneToRecord}</p>
-          <p>{t.maxDuration}</p>
+          <p>Presiona el micrófono para grabar una nota de voz</p>
+          <p>Duración máxima: {formatDuration(maxDuration)}</p>
         </div>
       </CardContent>
     </Card>
