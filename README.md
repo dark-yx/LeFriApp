@@ -207,7 +207,7 @@ This software and its documentation are the intellectual property of LeFriPlatfo
 
 Any unauthorized use of this software constitutes copyright infringement and may result in legal action.
 
-## 🙏 Acknowledgments
+## 🙏 Sponsored by
 
 - Underlife Foundation
 - Weblifetech
