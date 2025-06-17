@@ -210,67 +210,67 @@ export function ProcessDetail({ processId, country }: ProcessDetailProps) {
           <CardHeader className="pb-4">
             <CardTitle className="flex items-center gap-2 text-lg font-semibold text-neutral-900">
               <FileText className="h-5 w-5" />
-              {t.processDetails}
+              {t.processDetails.documents.title}
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <div>
-              <Label className="text-sm font-medium text-neutral-700">{t.processDocuments.caseNumber}</Label>
+              <Label className="text-sm font-medium text-neutral-700">{t.processDetails.documents.caseNumber}</Label>
               <Input
                 value={processData.metadata?.caseNumber || ''}
                 onChange={(e) => {
                   const metadata = { ...(processData.metadata || {}), caseNumber: e.target.value };
                   updateProcessMutation.mutate({ metadata });
                 }}
-                placeholder={t.processDocuments.caseNumber}
+                placeholder={t.processDetails.documents.caseNumber}
                 className="mt-1"
               />
             </div>
             <div>
-              <Label className="text-sm font-medium text-neutral-700">{t.processDocuments.court}</Label>
+              <Label className="text-sm font-medium text-neutral-700">{t.processDetails.documents.court}</Label>
               <Input
                 value={processData.metadata?.court || ''}
                 onChange={(e) => {
                   const metadata = { ...(processData.metadata || {}), court: e.target.value };
                   updateProcessMutation.mutate({ metadata });
                 }}
-                placeholder={t.processDocuments.court}
+                placeholder={t.processDetails.documents.court}
                 className="mt-1"
               />
             </div>
             <div>
-              <Label className="text-sm font-medium text-neutral-700">{t.processDocuments.judge}</Label>
+              <Label className="text-sm font-medium text-neutral-700">{t.processDetails.documents.judge}</Label>
               <Input
                 value={processData.metadata?.judge || ''}
                 onChange={(e) => {
                   const metadata = { ...(processData.metadata || {}), judge: e.target.value };
                   updateProcessMutation.mutate({ metadata });
                 }}
-                placeholder={t.processDocuments.judge}
+                placeholder={t.processDetails.documents.judge}
                 className="mt-1"
               />
             </div>
             <div>
-              <Label className="text-sm font-medium text-neutral-700">{t.processDocuments.opposingParty}</Label>
+              <Label className="text-sm font-medium text-neutral-700">{t.processDetails.documents.opposingParty}</Label>
               <Input
                 value={processData.metadata?.opposingParty || ''}
                 onChange={(e) => {
                   const metadata = { ...(processData.metadata || {}), opposingParty: e.target.value };
                   updateProcessMutation.mutate({ metadata });
                 }}
-                placeholder={t.processDocuments.opposingParty}
+                placeholder={t.processDetails.documents.opposingParty}
                 className="mt-1"
               />
             </div>
             <div>
-              <Label className="text-sm font-medium text-neutral-700">{t.processDocuments.amount}</Label>
+              <Label className="text-sm font-medium text-neutral-700">{t.processDetails.documents.amount}</Label>
               <Input
                 value={processData.metadata?.amount || ''}
                 onChange={(e) => {
                   const metadata = { ...(processData.metadata || {}), amount: e.target.value };
                   updateProcessMutation.mutate({ metadata });
                 }}
-                placeholder={t.processDocuments.amount}
+                placeholder={t.processDetails.documents.amount}
                 className="mt-1"
               />
             </div>
@@ -328,7 +328,7 @@ export function ProcessDetail({ processId, country }: ProcessDetailProps) {
             <CardTitle className="flex items-center justify-between">
               <span className="flex items-center gap-2">
                 <FileText className="h-5 w-5" />
-                {t.processTimeline.title}
+                {t.processDetails.timeline.title}
               </span>
               <Button
                 variant="outline"
@@ -337,7 +337,7 @@ export function ProcessDetail({ processId, country }: ProcessDetailProps) {
                 disabled={generateDocumentMutation.isPending}
               >
                 <Download className="h-4 w-4 mr-2" />
-                {generateDocumentMutation.isPending ? t.processLoading : t.processDocuments.download}
+                {generateDocumentMutation.isPending ? t.loading : t.processDetails.documents.download}
               </Button>
             </CardTitle>
           </CardHeader>

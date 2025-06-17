@@ -50,7 +50,7 @@ export function ProcessList() {
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const { language } = useLanguage();
-  const t = useTranslations(language);
+  const translations = useTranslations(language);
 
   const { data: processes = [], isLoading } = useQuery<ProcessSummary[]>({
     queryKey: ['/api/processes'],
@@ -78,14 +78,14 @@ export function ProcessList() {
   });
 
   const processTypes = [
-    { value: 'civil', label: t.processTypes.civil },
-    { value: 'penal', label: t.processTypes.penal },
-    { value: 'laboral', label: t.processTypes.laboral },
-    { value: 'administrativo', label: t.processTypes.administrativo },
-    { value: 'familia', label: t.processTypes.familia },
-    { value: 'comercial', label: t.processTypes.comercial },
-    { value: 'constitucional', label: t.processTypes.constitucional },
-    { value: 'otros', label: t.processTypes.otros }
+    { value: 'civil', label: translations.processTypes.civil },
+    { value: 'penal', label: translations.processTypes.penal },
+    { value: 'laboral', label: translations.processTypes.laboral },
+    { value: 'administrativo', label: translations.processTypes.administrativo },
+    { value: 'familia', label: translations.processTypes.familia },
+    { value: 'comercial', label: translations.processTypes.comercial },
+    { value: 'constitucional', label: translations.processTypes.constitucional },
+    { value: 'otros', label: translations.processTypes.otros }
   ];
 
   const getStatusColor = (status: string) => {
@@ -98,12 +98,12 @@ export function ProcessList() {
   };
 
   const getStatusText = (status: string) => {
-    switch (status) {
-      case 'completed': return t.processStatus.completed;
-      case 'in_progress': return t.processStatus.inProgress;
-      case 'pending': return t.processStatus.pending;
-      default: return t.processStatus.pending;
-    }
+    const statusMap = {
+      completed: translations.processStatus.completed,
+      in_progress: translations.processStatus.inProgress,
+      pending: translations.processStatus.pending
+    };
+    return statusMap[status as keyof typeof statusMap] || translations.processStatus.pending;
   };
 
   const getPriorityColor = (priority: string) => {
@@ -116,12 +116,12 @@ export function ProcessList() {
   };
 
   const getPriorityText = (priority: string) => {
-    switch (priority) {
-      case 'high': return t.processPriorities.high;
-      case 'medium': return t.processPriorities.medium;
-      case 'low': return t.processPriorities.low;
-      default: return t.processPriorities.medium;
-    }
+    const priorityMap = {
+      high: translations.processPriorities.high,
+      medium: translations.processPriorities.medium,
+      low: translations.processPriorities.low
+    };
+    return priorityMap[priority as keyof typeof priorityMap] || translations.processPriorities.medium;
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -135,7 +135,7 @@ export function ProcessList() {
         <div className="flex items-center justify-center h-64">
           <div className="text-center">
             <Clock className="h-8 w-8 animate-spin mx-auto mb-2" />
-            <p>{t.processLoading}</p>
+            <p>{translations.processLoading}</p>
           </div>
         </div>
       </main>
@@ -156,9 +156,9 @@ export function ProcessList() {
             </Button>
           </Link>
           <div>
-            <h1 className="text-2xl font-bold text-neutral-900">{t.myProcesses}</h1>
+            <h1 className="text-2xl font-bold text-neutral-900">{translations.myProcesses}</h1>
             <p className="text-sm text-neutral-500">
-              {t.processDescription}
+              {translations.processDescription}
             </p>
           </div>
         </div>
@@ -168,36 +168,36 @@ export function ProcessList() {
             <DialogTrigger asChild>
               <Button className="flex items-center gap-2">
                 <Plus className="h-4 w-4" />
-                {t.createProcess}
+                {translations.createProcess}
               </Button>
             </DialogTrigger>
             <DialogContent className="max-w-md">
               <DialogHeader>
-                <DialogTitle>{t.createProcess}</DialogTitle>
+                <DialogTitle>{translations.createProcess}</DialogTitle>
                 <DialogDescription>
-                  {t.processDescription}
+                  {translations.processDescription}
                 </DialogDescription>
               </DialogHeader>
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
-                  <Label htmlFor="title">{t.processTitle}</Label>
+                  <Label htmlFor="title">{translations.processTitle}</Label>
                   <Input
                     id="title"
                     value={formData.title}
                     onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                    placeholder={t.processTitle}
+                    placeholder={translations.processTitle}
                     required
                   />
                 </div>
                 <div>
-                  <Label htmlFor="type">{t.processType}</Label>
+                  <Label htmlFor="type">{translations.processType}</Label>
                   <Select
                     value={formData.type}
                     onValueChange={(value) => setFormData({ ...formData, type: value })}
                     required
                   >
                     <SelectTrigger>
-                      <SelectValue placeholder={t.processType} />
+                      <SelectValue placeholder={translations.processType} />
                     </SelectTrigger>
                     <SelectContent>
                       {processTypes.map((type) => (
@@ -209,17 +209,17 @@ export function ProcessList() {
                   </Select>
                 </div>
                 <div>
-                  <Label htmlFor="description">{t.processDescription}</Label>
+                  <Label htmlFor="description">{translations.processDescription}</Label>
                   <Textarea
                     id="description"
                     value={formData.description}
                     onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                    placeholder={t.processDescription}
+                    placeholder={translations.processDescription}
                     rows={3}
                   />
                 </div>
                 <div>
-                  <Label htmlFor="priority">{t.priority}</Label>
+                  <Label htmlFor="priority">{translations.priority}</Label>
                   <Select
                     value={formData.priority}
                     onValueChange={(value: 'low' | 'medium' | 'high') => 
@@ -230,14 +230,14 @@ export function ProcessList() {
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="low">{t.processPriorities.low}</SelectItem>
-                      <SelectItem value="medium">{t.processPriorities.medium}</SelectItem>
-                      <SelectItem value="high">{t.processPriorities.high}</SelectItem>
+                      <SelectItem value="low">{translations.processPriorities.low}</SelectItem>
+                      <SelectItem value="medium">{translations.processPriorities.medium}</SelectItem>
+                      <SelectItem value="high">{translations.processPriorities.high}</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
                 <div>
-                  <Label htmlFor="deadline">{t.processDeadline}</Label>
+                  <Label htmlFor="deadline">{translations.processDeadline}</Label>
                   <Input
                     id="deadline"
                     type="date"
@@ -251,14 +251,14 @@ export function ProcessList() {
                     disabled={createProcessMutation.isPending}
                     className="flex-1"
                   >
-                    {createProcessMutation.isPending ? t.processLoading : t.createProcess}
+                    {createProcessMutation.isPending ? translations.processLoading : translations.createProcess}
                   </Button>
                   <Button 
                     type="button" 
                     variant="outline" 
                     onClick={() => setShowCreateDialog(false)}
                   >
-                    {t.cancel}
+                    {translations.cancel}
                   </Button>
                 </div>
               </form>
@@ -285,13 +285,13 @@ export function ProcessList() {
                           {getPriorityText(process.metadata?.priority)}
                         </Badge>
                         <span className="text-sm text-neutral-500">
-                          {t.processCreatedOn} {new Date(process.createdAt).toLocaleDateString(language === 'es' ? 'es-ES' : 'en-US')}
+                          {translations.processCreatedOn} {new Date(process.createdAt).toLocaleDateString(language === 'es' ? 'es-ES' : 'en-US')}
                         </span>
                       </div>
                     </div>
                     <Link href={`/processes/${process.id || process._id}`}>
                       <Button variant="outline" size="sm">
-                        {t.processViewDetails}
+                        {translations.processDetails.viewDetails}
                       </Button>
                     </Link>
                   </div>
@@ -303,19 +303,14 @@ export function ProcessList() {
               </Card>
             ))
           ) : (
-            <Card>
-              <CardContent className="text-center py-8">
-                <FileText className="h-8 w-8 mx-auto mb-2 text-neutral-400" />
-                <p className="text-neutral-500">{t.processNoActive}</p>
-                <Button 
-                  variant="link" 
-                  className="text-blue-500 mt-2"
-                  onClick={() => setShowCreateDialog(true)}
-                >
-                  {t.processCreateFirst}
-                </Button>
-              </CardContent>
-            </Card>
+            <div className="text-center py-12">
+              <FileText className="h-12 w-12 text-neutral-400 mx-auto mb-4" />
+              <h3 className="text-lg font-medium text-neutral-900 mb-1">{translations.noProcesses}</h3>
+              <p className="text-neutral-500 mb-4">{translations.processDescription}</p>
+              <Button onClick={() => setShowCreateDialog(true)}>
+                {translations.createProcess}
+              </Button>
+            </div>
           )}
         </div>
       </div>

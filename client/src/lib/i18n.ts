@@ -88,39 +88,6 @@ export const translations = {
     processLabor: "Labor Lawsuit",
     step: "Step",
     inProgress: "In progress",
-    processDetails: "Process Details",
-    processDocuments: "Process Documents",
-    processTimeline: "Process Timeline",
-    processNotes: "Process Notes",
-    processStatus: {
-      pending: "Pending",
-      inProgress: "In Progress",
-      completed: "Completed",
-      cancelled: "Cancelled"
-    },
-    processActions: {
-      edit: "Edit Process",
-      delete: "Delete Process",
-      archive: "Archive Process",
-      share: "Share Process"
-    },
-    processValidation: {
-      titleRequired: "Process title is required",
-      typeRequired: "Process type is required",
-      descriptionRequired: "Process description is required"
-    },
-    processSuccess: {
-      created: "Process created successfully",
-      updated: "Process updated successfully",
-      deleted: "Process deleted successfully",
-      archived: "Process archived successfully"
-    },
-    processError: {
-      create: "Error creating process",
-      update: "Error updating process",
-      delete: "Error deleting process",
-      archive: "Error archiving process"
-    },
     processTypes: {
       civil: "Civil Process",
       penal: "Criminal Process",
@@ -131,84 +98,67 @@ export const translations = {
       constitucional: "Constitutional Process",
       otros: "Others"
     },
+    processStatus: {
+      pending: "Pending",
+      inProgress: "In Progress",
+      completed: "Completed",
+      cancelled: "Cancelled"
+    },
     processPriorities: {
       low: "Low",
       medium: "Medium",
       high: "High"
     },
-    processDeadline: "Deadline (Optional)",
-    processLoading: "Loading processes...",
-    processNoActive: "No active processes",
-    processCreateFirst: "Create first process",
-    processViewDetails: "View Details",
-    processCreatedOn: "Created on",
-    processLegalBasis: "Legal Basis",
-    processConstitutionalArticles: "Constitutional Articles",
-    processBackToProcesses: "Back to Processes",
-    processInvalidId: "Invalid process ID",
-    processDocuments: {
-      title: "Process Documents",
-      upload: "Upload Document",
-      download: "Download Document",
-      delete: "Delete Document",
-      noDocuments: "No documents uploaded",
-      uploadSuccess: "Document uploaded successfully",
-      uploadError: "Error uploading document",
-      deleteSuccess: "Document deleted successfully",
-      deleteError: "Error deleting document",
-      downloadError: "Error downloading document",
-      caseNumber: "Case Number",
-      court: "Court",
-      judge: "Judge",
-      opposingParty: "Opposing Party",
-      amount: "Amount in Dispute"
-    },
-    processTimeline: {
-      title: "Process Timeline",
-      noEvents: "No events recorded",
-      addEvent: "Add Event",
-      eventDate: "Event Date",
-      eventDescription: "Event Description",
-      eventType: "Event Type",
-      eventTypes: {
-        hearing: "Hearing",
-        filing: "Filing",
-        deadline: "Deadline",
-        meeting: "Meeting",
-        other: "Other"
+    processDetails: {
+      title: "Process Details",
+      viewDetails: "View Details",
+      documents: {
+        title: "Process Documents",
+        upload: "Upload Document",
+        download: "Download Document",
+        delete: "Delete Document",
+        noDocuments: "No documents uploaded",
+        uploadSuccess: "Document uploaded successfully",
+        uploadError: "Error uploading document",
+        deleteSuccess: "Document deleted successfully",
+        deleteError: "Error deleting document",
+        downloadError: "Error downloading document",
+        caseNumber: "Case Number",
+        court: "Court",
+        judge: "Judge",
+        opposingParty: "Opposing Party",
+        amount: "Amount in Dispute"
+      },
+      timeline: {
+        title: "Process Timeline",
+        noEvents: "No events recorded",
+        addEvent: "Add Event",
+        eventDate: "Event Date",
+        eventDescription: "Event Description",
+        eventType: "Event Type",
+        eventTypes: {
+          hearing: "Hearing",
+          filing: "Filing",
+          deadline: "Deadline",
+          meeting: "Meeting",
+          other: "Other"
+        }
+      },
+      notes: {
+        title: "Process Notes",
+        addNote: "Add Note",
+        editNote: "Edit Note",
+        deleteNote: "Delete Note",
+        noNotes: "No notes available",
+        noteContent: "Note Content",
+        noteDate: "Note Date",
+        addSuccess: "Note added successfully",
+        editSuccess: "Note edited successfully",
+        deleteSuccess: "Note deleted successfully",
+        addError: "Error adding note",
+        editError: "Error editing note",
+        deleteError: "Error deleting note"
       }
-    },
-    processNotes: {
-      title: "Process Notes",
-      addNote: "Add Note",
-      editNote: "Edit Note",
-      deleteNote: "Delete Note",
-      noNotes: "No notes available",
-      noteContent: "Note Content",
-      noteDate: "Note Date",
-      addSuccess: "Note added successfully",
-      editSuccess: "Note edited successfully",
-      deleteSuccess: "Note deleted successfully",
-      addError: "Error adding note",
-      editError: "Error editing note",
-      deleteError: "Error deleting note"
-    },
-    processValidation: {
-      titleRequired: "Process title is required",
-      typeRequired: "Process type is required",
-      descriptionRequired: "Process description is required",
-      invalidDate: "Invalid date format",
-      futureDate: "Date must be in the future",
-      documentRequired: "Document is required",
-      invalidFileType: "Invalid file type",
-      fileTooLarge: "File size exceeds limit"
-    },
-    processError: {
-      load: "Could not load process",
-      create: "Error creating process",
-      update: "Error updating process",
-      delete: "Error deleting process",
-      archive: "Error archiving process"
     },
 
     // Emergency
@@ -359,17 +309,19 @@ export const translations = {
     noActivity: "No consultations yet. Start by asking a legal question.",
 
     // Voice Recorder
-    startRecording: "Start Recording",
-    resume: "Resume",
-    pause: "Pause",
-    stop: "Stop",
-    play: "Play",
-    delete: "Delete",
-    send: "Send",
-    uploading: "Uploading...",
-    duration: "Duration",
-    recording: "Recording...",
-    recordingPaused: "Recording paused",
+    voiceRecorder: {
+      startRecording: "Start Recording",
+      resume: "Resume",
+      pause: "Pause",
+      stop: "Stop",
+      play: "Play",
+      delete: "Delete",
+      send: "Send",
+      uploading: "Uploading...",
+      duration: "Duration",
+      recording: "Recording...",
+      recordingPaused: "Recording paused"
+    },
   },
 
   es: {
@@ -458,39 +410,6 @@ export const translations = {
     processLabor: "Demanda Laboral",
     step: "Paso",
     inProgress: "En progreso",
-    processDetails: "Detalles del Proceso",
-    processDocuments: "Documentos del Proceso",
-    processTimeline: "Línea de Tiempo",
-    processNotes: "Notas del Proceso",
-    processStatus: {
-      pending: "Pendiente",
-      inProgress: "En Progreso",
-      completed: "Completado",
-      cancelled: "Cancelado"
-    },
-    processActions: {
-      edit: "Editar Proceso",
-      delete: "Eliminar Proceso",
-      archive: "Archivar Proceso",
-      share: "Compartir Proceso"
-    },
-    processValidation: {
-      titleRequired: "El título del proceso es requerido",
-      typeRequired: "El tipo de proceso es requerido",
-      descriptionRequired: "La descripción del proceso es requerida"
-    },
-    processSuccess: {
-      created: "Proceso creado exitosamente",
-      updated: "Proceso actualizado exitosamente",
-      deleted: "Proceso eliminado exitosamente",
-      archived: "Proceso archivado exitosamente"
-    },
-    processError: {
-      create: "Error al crear el proceso",
-      update: "Error al actualizar el proceso",
-      delete: "Error al eliminar el proceso",
-      archive: "Error al archivar el proceso"
-    },
     processTypes: {
       civil: "Proceso Civil",
       penal: "Proceso Penal",
@@ -501,84 +420,67 @@ export const translations = {
       constitucional: "Proceso Constitucional",
       otros: "Otros"
     },
+    processStatus: {
+      pending: "Pendiente",
+      inProgress: "En Progreso",
+      completed: "Completado",
+      cancelled: "Cancelado"
+    },
     processPriorities: {
-      low: "Baja",
-      medium: "Media",
-      high: "Alta"
+      low: "Bajo",
+      medium: "Medio",
+      high: "Alto"
     },
-    processDeadline: "Fecha Límite (Opcional)",
-    processLoading: "Cargando procesos...",
-    processNoActive: "No hay procesos activos",
-    processCreateFirst: "Crear primer proceso",
-    processViewDetails: "Ver Detalles",
-    processCreatedOn: "Creado el",
-    processLegalBasis: "Base Legal",
-    processConstitutionalArticles: "Artículos Constitucionales",
-    processBackToProcesses: "Volver a Procesos",
-    processInvalidId: "ID de proceso no válido",
-    processDocuments: {
-      title: "Documentos del Proceso",
-      upload: "Subir Documento",
-      download: "Descargar Documento",
-      delete: "Eliminar Documento",
-      noDocuments: "No hay documentos subidos",
-      uploadSuccess: "Documento subido exitosamente",
-      uploadError: "Error al subir documento",
-      deleteSuccess: "Documento eliminado exitosamente",
-      deleteError: "Error al eliminar documento",
-      downloadError: "Error al descargar documento",
-      caseNumber: "Número de Caso",
-      court: "Tribunal",
-      judge: "Juez",
-      opposingParty: "Parte Contraria",
-      amount: "Monto en Disputa"
-    },
-    processTimeline: {
-      title: "Línea de Tiempo del Proceso",
-      noEvents: "No hay eventos registrados",
-      addEvent: "Agregar Evento",
-      eventDate: "Fecha del Evento",
-      eventDescription: "Descripción del Evento",
-      eventType: "Tipo de Evento",
-      eventTypes: {
-        hearing: "Audiencia",
-        filing: "Presentación",
-        deadline: "Fecha Límite",
-        meeting: "Reunión",
-        other: "Otro"
+    processDetails: {
+      title: "Detalles del Proceso",
+      viewDetails: "Ver Detalles",
+      documents: {
+        title: "Documentos del Proceso",
+        upload: "Subir Documento",
+        download: "Descargar Documento",
+        delete: "Eliminar Documento",
+        noDocuments: "No hay documentos subidos",
+        uploadSuccess: "Documento subido exitosamente",
+        uploadError: "Error al subir documento",
+        deleteSuccess: "Documento eliminado exitosamente",
+        deleteError: "Error al eliminar documento",
+        downloadError: "Error al descargar documento",
+        caseNumber: "Número de Caso",
+        court: "Tribunal",
+        judge: "Juez",
+        opposingParty: "Parte Contraria",
+        amount: "Monto en Disputa"
+      },
+      timeline: {
+        title: "Línea de Tiempo del Proceso",
+        noEvents: "No hay eventos registrados",
+        addEvent: "Agregar Evento",
+        eventDate: "Fecha del Evento",
+        eventDescription: "Descripción del Evento",
+        eventType: "Tipo de Evento",
+        eventTypes: {
+          hearing: "Audiencia",
+          filing: "Presentación",
+          deadline: "Fecha Límite",
+          meeting: "Reunión",
+          other: "Otro"
+        }
+      },
+      notes: {
+        title: "Notas del Proceso",
+        addNote: "Agregar Nota",
+        editNote: "Editar Nota",
+        deleteNote: "Eliminar Nota",
+        noNotes: "No hay notas disponibles",
+        noteContent: "Contenido de la Nota",
+        noteDate: "Fecha de la Nota",
+        addSuccess: "Nota agregada exitosamente",
+        editSuccess: "Nota editada exitosamente",
+        deleteSuccess: "Nota eliminada exitosamente",
+        addError: "Error al agregar nota",
+        editError: "Error al editar nota",
+        deleteError: "Error al eliminar nota"
       }
-    },
-    processNotes: {
-      title: "Notas del Proceso",
-      addNote: "Agregar Nota",
-      editNote: "Editar Nota",
-      deleteNote: "Eliminar Nota",
-      noNotes: "No hay notas disponibles",
-      noteContent: "Contenido de la Nota",
-      noteDate: "Fecha de la Nota",
-      addSuccess: "Nota agregada exitosamente",
-      editSuccess: "Nota editada exitosamente",
-      deleteSuccess: "Nota eliminada exitosamente",
-      addError: "Error al agregar nota",
-      editError: "Error al editar nota",
-      deleteError: "Error al eliminar nota"
-    },
-    processValidation: {
-      titleRequired: "El título del proceso es requerido",
-      typeRequired: "El tipo de proceso es requerido",
-      descriptionRequired: "La descripción del proceso es requerida",
-      invalidDate: "Formato de fecha inválido",
-      futureDate: "La fecha debe ser futura",
-      documentRequired: "El documento es requerido",
-      invalidFileType: "Tipo de archivo inválido",
-      fileTooLarge: "El tamaño del archivo excede el límite"
-    },
-    processError: {
-      load: "No se pudo cargar el proceso",
-      create: "Error al crear el proceso",
-      update: "Error al actualizar el proceso",
-      delete: "Error al eliminar el proceso",
-      archive: "Error al archivar el proceso"
     },
 
     // Emergency
@@ -729,17 +631,19 @@ export const translations = {
     noActivity: "Aún no hay consultas. Comienza haciendo una pregunta legal.",
 
     // Voice Recorder
-    startRecording: "Iniciar Grabación",
-    resume: "Reanudar",
-    pause: "Pausar",
-    stop: "Detener",
-    play: "Reproducir",
-    delete: "Eliminar",
-    send: "Enviar",
-    uploading: "Subiendo...",
-    duration: "Duración",
-    recording: "Grabando...",
-    recordingPaused: "Grabación pausada",
+    voiceRecorder: {
+      startRecording: "Iniciar Grabación",
+      resume: "Reanudar",
+      pause: "Pausar",
+      stop: "Detener",
+      play: "Reproducir",
+      delete: "Eliminar",
+      send: "Enviar",
+      uploading: "Subiendo...",
+      duration: "Duración",
+      recording: "Grabando...",
+      recordingPaused: "Grabación pausada"
+    },
   }
 };
 
