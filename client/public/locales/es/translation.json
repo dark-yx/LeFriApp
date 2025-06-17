@@ -150,6 +150,31 @@
       "typing": "Escribiendo...",
       "noMessages": "Aún no hay mensajes. Inicia una conversación sobre tu proceso legal.",
       "chatPlaceholder": "Escribe tu mensaje aquí..."
+    },
+    "actions": {
+      "edit": "Editar Proceso",
+      "delete": "Eliminar Proceso",
+      "archive": "Archivar Proceso",
+      "share": "Compartir Proceso",
+      "download": "Descargar Documentos",
+      "print": "Imprimir Proceso"
+    },
+    "validation": {
+      "titleRequired": "El título del proceso es requerido",
+      "typeRequired": "El tipo de proceso es requerido",
+      "descriptionRequired": "La descripción del proceso es requerida",
+      "invalidDate": "Formato de fecha inválido",
+      "futureDate": "La fecha límite debe ser una fecha futura"
+    },
+    "messages": {
+      "confirmDelete": "¿Estás seguro de que quieres eliminar este proceso?",
+      "confirmArchive": "¿Estás seguro de que quieres archivar este proceso?",
+      "processDeleted": "Proceso eliminado exitosamente",
+      "processArchived": "Proceso archivado exitosamente",
+      "processUpdated": "Proceso actualizado exitosamente",
+      "errorDeleting": "Error al eliminar el proceso",
+      "errorArchiving": "Error al archivar el proceso",
+      "errorUpdating": "Error al actualizar el proceso"
     }
   },
   "emergency": {

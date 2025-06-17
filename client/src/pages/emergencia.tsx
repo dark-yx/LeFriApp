@@ -216,14 +216,14 @@ export default function Emergencia() {
                             variant="outline"
                             onClick={() => setIsAddingContact(false)}
                           >
-                            Cancelar
+                            {t.cancel}
                           </Button>
                           <Button 
                             type="submit" 
                             className="bg-blue-500 hover:bg-blue-600"
                             disabled={addContactMutation.isPending}
                           >
-                            {addContactMutation.isPending ? 'Guardando...' : t.save}
+                            {addContactMutation.isPending ? t.saving : t.save}
                           </Button>
                         </div>
                       </form>
@@ -275,7 +275,7 @@ export default function Emergencia() {
                     <div className="text-center py-8 text-neutral-500">
                       <MessageSquare className="w-8 h-8 mx-auto mb-2 opacity-50" />
                       <p className="text-sm">{t.noContacts}</p>
-                      <p className="text-xs">{t.addContacts}</p>
+                      <p className="text-xs">{t.addContact}</p>
                     </div>
                   )}
                 </div>
@@ -284,7 +284,7 @@ export default function Emergencia() {
                   <Alert className="mt-4 border-orange-200 bg-orange-50">
                     <MessageSquare className="w-4 h-4 text-orange-600" />
                     <AlertDescription className="text-orange-700">
-                      {t.contactsWithWhatsApp}
+                      {t.notifyViaWhatsApp}
                     </AlertDescription>
                   </Alert>
                 )}

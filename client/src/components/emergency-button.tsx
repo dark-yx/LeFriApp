@@ -6,15 +6,19 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { useEmergency } from '@/hooks/use-emergency';
 import { VoiceRecorder } from '@/components/voice-recorder';
 import { AlertTriangle, CheckCircle, MapPin, Mic, Send } from 'lucide-react';
+import { useLanguage } from '@/contexts/LanguageContext';
+import { useTranslations } from '@/lib/i18n';
 
 export function EmergencyButton() {
   const { status, activateEmergency, isActivating, resetStatus } = useEmergency();
   const [showVoiceModal, setShowVoiceModal] = useState(false);
   const [voiceBlob, setVoiceBlob] = useState<Blob | null>(null);
   const [isSendingWithVoice, setIsSendingWithVoice] = useState(false);
+  const { language } = useLanguage();
+  const t = useTranslations(language);
 
   const handleActivateEmergency = () => {
-    if (window.confirm('¿Estás seguro de que quieres activar la alerta de emergencia? Se enviará tu ubicación a tus contactos de emergencia.')) {
+    if (window.confirm(t.emergencyConfirmMessage)) {
       activateEmergency();
     }
   };
@@ -29,7 +33,6 @@ export function EmergencyButton() {
     setIsSendingWithVoice(true);
     
     try {
-      // Get current location
       const position = await new Promise<GeolocationPosition>((resolve, reject) => {
         navigator.geolocation.getCurrentPosition(resolve, reject, {
           enableHighAccuracy: true,
@@ -41,7 +44,6 @@ export function EmergencyButton() {
       const { latitude, longitude } = position.coords;
       const address = `Lat: ${latitude.toFixed(4)}, Lng: ${longitude.toFixed(4)}`;
 
-      // Create form data with voice recording
       const formData = new FormData();
       formData.append('voiceNote', voiceBlob, 'emergency_voice.webm');
       formData.append('latitude', latitude.toString());
@@ -51,7 +53,7 @@ export function EmergencyButton() {
       const response = await fetch('/api/emergency/with-voice', {
         method: 'POST',
         headers: {
-          'X-User-Id': '1', // Demo auth
+          'X-User-Id': '1',
         },
         body: formData,
       });
@@ -61,17 +63,13 @@ export function EmergencyButton() {
       }
 
       const result = await response.json();
-      
-      // Update status with result
       resetStatus();
-      // Simulate status update (in real app, this would come from the hook)
       setTimeout(() => {
         const emergencyStatus = {
           status: result.status,
           contactsNotified: result.contactsNotified,
           location: result.location
         };
-        // This would normally be handled by the emergency hook
       }, 100);
 
       setShowVoiceModal(false);
@@ -79,7 +77,7 @@ export function EmergencyButton() {
       
     } catch (error) {
       console.error('Emergency with voice error:', error);
-      alert('Error al enviar alerta con nota de voz. Intenta nuevamente.');
+      alert(t.emergencyVoiceError);
     } finally {
       setIsSendingWithVoice(false);
     }
@@ -88,12 +86,11 @@ export function EmergencyButton() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="text-xl">Activar Emergencia</CardTitle>
+        <CardTitle className="text-xl">{t.emergencyActivate}</CardTitle>
       </CardHeader>
       <CardContent className="space-y-6">
         <p className="text-neutral-600">
-          En caso de emergencia, presiona el botón para enviar alertas automáticas a tus contactos 
-          de emergencia con tu ubicación actual.
+          {t.emergencyDescription}
         </p>
 
         <div className="space-y-3">
@@ -107,7 +104,7 @@ export function EmergencyButton() {
             }`}
           >
             <AlertTriangle className="w-6 h-6 mr-3" />
-            {isActivating ? 'ENVIANDO ALERTAS...' : 'ACTIVAR EMERGENCIA'}
+            {isActivating ? t.sendingAlerts : t.emergencyActivate}
           </Button>
 
           <Button
@@ -121,7 +118,7 @@ export function EmergencyButton() {
             }`}
           >
             <Mic className="w-5 h-5 mr-2" />
-            EMERGENCIA CON NOTA DE VOZ
+            {t.emergencyActivateWithVoice}
           </Button>
         </div>
 
@@ -136,7 +133,7 @@ export function EmergencyButton() {
                 <div className="flex items-center space-x-2">
                   <div className="loader"></div>
                   <span className="text-sm font-medium text-yellow-700">
-                    Enviando alertas de emergencia...
+                    {t.sendingAlerts}
                   </span>
                 </div>
               )}
@@ -146,14 +143,14 @@ export function EmergencyButton() {
                   <div className="flex items-center space-x-2">
                     <CheckCircle className="w-5 h-5 text-green-600" />
                     <span className="text-sm font-medium text-green-700">
-                      Alertas enviadas exitosamente
+                      {t.alertsSentSuccess}
                     </span>
                   </div>
                   
                   {status.location && (
                     <div className="flex items-center space-x-2 text-sm text-green-600">
                       <MapPin className="w-4 h-4" />
-                      <span>Ubicación obtenida: {status.location.address || 'Coordenadas enviadas'}</span>
+                      <span>{t.locationObtained}: {status.location.address || t.coordinatesSent}</span>
                     </div>
                   )}
                   
@@ -161,7 +158,7 @@ export function EmergencyButton() {
                     {status.contactsNotified.map((contact) => (
                       <div key={contact.id} className="flex items-center space-x-2 text-sm text-green-600">
                         <CheckCircle className="w-4 h-4" />
-                        <span>Alerta enviada a {contact.name} vía WhatsApp</span>
+                        <span>{t.alertSentTo} {contact.name} {t.viaWhatsApp}</span>
                       </div>
                     ))}
                   </div>
@@ -172,7 +169,7 @@ export function EmergencyButton() {
                     size="sm"
                     className="mt-3"
                   >
-                    Cerrar
+                    {t.close}
                   </Button>
                 </div>
               )}
@@ -181,7 +178,7 @@ export function EmergencyButton() {
                 <div className="flex items-center space-x-2">
                   <AlertTriangle className="w-5 h-5 text-red-600" />
                   <span className="text-sm font-medium text-red-700">
-                    Error al enviar alertas. Intenta nuevamente.
+                    {t.emergencyError}
                   </span>
                 </div>
               )}
@@ -189,24 +186,22 @@ export function EmergencyButton() {
           </Alert>
         )}
 
-        {/* Voice Recording Modal */}
         <Dialog open={showVoiceModal} onOpenChange={setShowVoiceModal}>
           <DialogContent className="max-w-lg">
             <DialogHeader>
               <DialogTitle className="text-xl font-bold text-red-600 flex items-center space-x-2">
                 <AlertTriangle className="w-6 h-6" />
-                <span>Emergencia con Nota de Voz</span>
+                <span>{t.emergencyActivateWithVoice}</span>
               </DialogTitle>
             </DialogHeader>
             
             <div className="space-y-4">
               <p className="text-sm text-gray-600">
-                Graba una nota de voz explicando tu situación de emergencia. 
-                Esta se enviará junto con tu ubicación a todos tus contactos.
+                {t.emergencyVoiceDescription}
               </p>
               
               <VoiceRecorder
-                title="Nota de Voz de Emergencia"
+                title={t.emergencyVoiceNote}
                 maxDuration={60}
                 onRecordingComplete={setVoiceBlob}
               />
@@ -217,7 +212,7 @@ export function EmergencyButton() {
                     onClick={() => setShowVoiceModal(false)}
                     variant="outline"
                   >
-                    Cancelar
+                    {t.cancel}
                   </Button>
                   <Button
                     onClick={sendEmergencyWithVoice}
@@ -225,7 +220,7 @@ export function EmergencyButton() {
                     className="bg-red-500 hover:bg-red-600 text-white"
                   >
                     <Send className="w-4 h-4 mr-2" />
-                    {isSendingWithVoice ? 'Enviando...' : 'Enviar Alerta de Emergencia'}
+                    {isSendingWithVoice ? t.sending : t.sendAlert}
                   </Button>
                 </div>
               )}

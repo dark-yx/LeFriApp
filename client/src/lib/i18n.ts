@@ -56,7 +56,7 @@ export const translations = {
 
     // Consultation
     askQuestion: "Ask your legal question",
-    questionPlaceholder: "Describe your legal situation or question...",
+    questionPlaceholder: "Write your question about the Constitution of {country}...",
     askButton: "Ask",
     consultationHistory: "Consultation History",
     newConsultation: "New Consultation",
@@ -67,6 +67,8 @@ export const translations = {
     relevance: "relevance",
     quickQuestions: "Quick Questions",
     typeQuestion: "Type your legal question...",
+    thinking: "Thinking...",
+    constitution: "Constitution",
 
     // Processes
     myProcesses: "My Processes",
@@ -86,18 +88,51 @@ export const translations = {
     processLabor: "Labor Lawsuit",
     step: "Step",
     inProgress: "In progress",
+    processDetails: "Process Details",
+    processDocuments: "Process Documents",
+    processTimeline: "Process Timeline",
+    processNotes: "Process Notes",
+    processStatus: {
+      pending: "Pending",
+      inProgress: "In Progress",
+      completed: "Completed",
+      cancelled: "Cancelled"
+    },
+    processActions: {
+      edit: "Edit Process",
+      delete: "Delete Process",
+      archive: "Archive Process",
+      share: "Share Process"
+    },
+    processValidation: {
+      titleRequired: "Process title is required",
+      typeRequired: "Process type is required",
+      descriptionRequired: "Process description is required"
+    },
+    processSuccess: {
+      created: "Process created successfully",
+      updated: "Process updated successfully",
+      deleted: "Process deleted successfully",
+      archived: "Process archived successfully"
+    },
+    processError: {
+      create: "Error creating process",
+      update: "Error updating process",
+      delete: "Error deleting process",
+      archive: "Error archiving process"
+    },
 
     // Emergency
     emergencyTitle: "Emergency System",
-    emergencyDescription: "In case of legal emergency, press the button to alert your contacts",
+    emergencyDescription: "In case of emergency, press the button to send automatic alerts to your emergency contacts with your current location",
+    emergencyActivate: "Activate Emergency",
+    emergencyActivateWithVoice: "Emergency with Voice Note",
     sendAlert: "Send Alert",
     emergencyContacts: "Emergency Contacts",
     addContact: "Add Contact",
     contactName: "Contact Name",
     phoneNumber: "Phone Number",
     relationship: "Relationship",
-    activateEmergency: "Activate Emergency",
-    emergencyActivated: "Emergency Activated",
     location: "Location",
     contacts: "Contacts",
     notifyViaWhatsApp: "Notify via WhatsApp",
@@ -108,6 +143,23 @@ export const translations = {
     relationshipLawyer: "Lawyer",
     relationshipFriend: "Friend",
     relationshipOther: "Other",
+    emergencyConfirmMessage: "Are you sure you want to activate the emergency alert? Your location will be sent to your emergency contacts.",
+    sendingAlerts: "SENDING ALERTS...",
+    alertsSentSuccess: "Alerts sent successfully",
+    locationObtained: "Location obtained",
+    coordinatesSent: "Coordinates sent",
+    alertSentTo: "Alert sent to",
+    viaWhatsApp: "via WhatsApp",
+    emergencyError: "Error sending alerts. Please try again.",
+    emergencyVoiceError: "Error sending emergency alert with voice note. Please try again.",
+    emergencyVoiceDescription: "Record a voice note explaining your emergency situation. This will be sent along with your location to all your contacts.",
+    emergencyVoiceNote: "Emergency Voice Note",
+    startRecording: "Start Recording",
+    pressMicrophoneToRecord: "Press the microphone to record a voice note",
+    maxDuration: "Maximum duration: 1:00",
+    sending: "Sending...",
+    close: "Close",
+    cancel: "Cancel",
 
     // Profile & Account
     personalInformation: "Personal Information",
@@ -134,10 +186,8 @@ export const translations = {
     // Common
     loading: "Loading...",
     save: "Save",
-    cancel: "Cancel",
     edit: "Edit",
     delete: "Delete",
-    close: "Close",
     submit: "Submit",
     search: "Search",
     filter: "Filter",
@@ -216,10 +266,19 @@ export const translations = {
     quickQuestion3: "What should I do if I'm not being paid my salary?",
     quickQuestion4: "What are tenant rights?",
     legalResources: "Legal Resources",
-    constitution: "National Constitution",
-    civilCode: "Civil Code",
     updated: "Updated",
     noActivity: "No consultations yet. Start by asking a legal question.",
+
+    // Voice Recorder
+    resume: "Resume",
+    pause: "Pause",
+    stop: "Stop",
+    play: "Play",
+    send: "Send",
+    uploading: "Uploading...",
+    duration: "Duration",
+    recording: "Recording...",
+    recordingPaused: "Recording paused",
   },
 
   es: {
@@ -276,7 +335,7 @@ export const translations = {
 
     // Consultation
     askQuestion: "Haz tu pregunta legal",
-    questionPlaceholder: "Describe tu situación legal o pregunta...",
+    questionPlaceholder: "Escribe tu consulta sobre la Constitución de {country}...",
     askButton: "Preguntar",
     consultationHistory: "Historial de Consultas",
     newConsultation: "Nueva Consulta",
@@ -287,6 +346,8 @@ export const translations = {
     relevance: "relevancia",
     quickQuestions: "Preguntas Frecuentes",
     typeQuestion: "Escribe tu consulta legal...",
+    thinking: "Pensando...",
+    constitution: "Constitución",
 
     // Processes
     myProcesses: "Mis Procesos",
@@ -306,18 +367,51 @@ export const translations = {
     processLabor: "Demanda Laboral",
     step: "Paso",
     inProgress: "En progreso",
+    processDetails: "Detalles del Proceso",
+    processDocuments: "Documentos del Proceso",
+    processTimeline: "Línea de Tiempo",
+    processNotes: "Notas del Proceso",
+    processStatus: {
+      pending: "Pendiente",
+      inProgress: "En Progreso",
+      completed: "Completado",
+      cancelled: "Cancelado"
+    },
+    processActions: {
+      edit: "Editar Proceso",
+      delete: "Eliminar Proceso",
+      archive: "Archivar Proceso",
+      share: "Compartir Proceso"
+    },
+    processValidation: {
+      titleRequired: "El título del proceso es requerido",
+      typeRequired: "El tipo de proceso es requerido",
+      descriptionRequired: "La descripción del proceso es requerida"
+    },
+    processSuccess: {
+      created: "Proceso creado exitosamente",
+      updated: "Proceso actualizado exitosamente",
+      deleted: "Proceso eliminado exitosamente",
+      archived: "Proceso archivado exitosamente"
+    },
+    processError: {
+      create: "Error al crear el proceso",
+      update: "Error al actualizar el proceso",
+      delete: "Error al eliminar el proceso",
+      archive: "Error al archivar el proceso"
+    },
 
     // Emergency
     emergencyTitle: "Sistema de Emergencia",
-    emergencyDescription: "En caso de emergencia legal, presiona el botón para alertar a tus contactos",
+    emergencyDescription: "En caso de emergencia, presiona el botón para enviar alertas automáticas a tus contactos de emergencia con tu ubicación actual",
+    emergencyActivate: "Activar Emergencia",
+    emergencyActivateWithVoice: "Emergencia con Nota de Voz",
     sendAlert: "Enviar Alerta",
     emergencyContacts: "Contactos de Emergencia",
     addContact: "Agregar Contacto",
     contactName: "Nombre del Contacto",
     phoneNumber: "Número de Teléfono",
     relationship: "Relación",
-    activateEmergency: "Activar Emergencia",
-    emergencyActivated: "Emergencia Activada",
     location: "Ubicación",
     contacts: "Contactos",
     notifyViaWhatsApp: "Notificar por WhatsApp",
@@ -328,6 +422,23 @@ export const translations = {
     relationshipLawyer: "Abogado/a",
     relationshipFriend: "Amigo/a",
     relationshipOther: "Otro",
+    emergencyConfirmMessage: "¿Estás seguro de que quieres activar la alerta de emergencia? Se enviará tu ubicación a tus contactos de emergencia.",
+    sendingAlerts: "ENVIANDO ALERTAS...",
+    alertsSentSuccess: "Alertas enviadas exitosamente",
+    locationObtained: "Ubicación obtenida",
+    coordinatesSent: "Coordenadas enviadas",
+    alertSentTo: "Alerta enviada a",
+    viaWhatsApp: "vía WhatsApp",
+    emergencyError: "Error al enviar alertas. Intenta nuevamente.",
+    emergencyVoiceError: "Error al enviar alerta con nota de voz. Intenta nuevamente.",
+    emergencyVoiceDescription: "Graba una nota de voz explicando tu situación de emergencia. Esta se enviará junto con tu ubicación a todos tus contactos.",
+    emergencyVoiceNote: "Nota de Voz de Emergencia",
+    startRecording: "Iniciar Grabación",
+    pressMicrophoneToRecord: "Presiona el micrófono para grabar una nota de voz",
+    maxDuration: "Duración máxima: 1:00",
+    sending: "Enviando...",
+    close: "Cerrar",
+    cancel: "Cancelar",
 
     // Profile & Account
     personalInformation: "Información Personal",
@@ -354,10 +465,8 @@ export const translations = {
     // Common
     loading: "Cargando...",
     save: "Guardar",
-    cancel: "Cancelar",
     edit: "Editar",
     delete: "Eliminar",
-    close: "Cerrar",
     submit: "Enviar",
     search: "Buscar",
     filter: "Filtrar",
@@ -436,10 +545,19 @@ export const translations = {
     quickQuestion3: "¿Qué debo hacer si no me pagan el sueldo?",
     quickQuestion4: "¿Cuáles son los derechos del inquilino?",
     legalResources: "Recursos Legales",
-    constitution: "Constitución Nacional",
-    civilCode: "Código Civil",
     updated: "Actualizada",
-    noActivity: "Aún no hay consultas. Comienza haciendo una pregunta legal."
+    noActivity: "Aún no hay consultas. Comienza haciendo una pregunta legal.",
+
+    // Voice Recorder
+    resume: "Reanudar",
+    pause: "Pausar",
+    stop: "Detener",
+    play: "Reproducir",
+    send: "Enviar",
+    uploading: "Subiendo...",
+    duration: "Duración",
+    recording: "Grabando...",
+    recordingPaused: "Grabación pausada",
   }
 };
 
@@ -470,7 +588,7 @@ export function useTranslations(language: string = 'en') {
 
 export function getTranslation(key: TranslationKey, language: string = 'en'): string {
   const t = translations[language as Language] || translations.en;
-  return t[key] || key;
+  return typeof t[key] === 'string' ? t[key] as string : key;
 }
 
 export default translations;

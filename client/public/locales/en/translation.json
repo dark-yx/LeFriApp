@@ -158,6 +158,31 @@
       "typing": "Typing...",
       "noMessages": "No messages yet. Start a conversation about your legal process.",
       "chatPlaceholder": "Type your message here..."
+    },
+    "actions": {
+      "edit": "Edit Process",
+      "delete": "Delete Process",
+      "archive": "Archive Process",
+      "share": "Share Process",
+      "download": "Download Documents",
+      "print": "Print Process"
+    },
+    "validation": {
+      "titleRequired": "Process title is required",
+      "typeRequired": "Process type is required",
+      "descriptionRequired": "Process description is required",
+      "invalidDate": "Invalid date format",
+      "futureDate": "Deadline must be a future date"
+    },
+    "messages": {
+      "confirmDelete": "Are you sure you want to delete this process?",
+      "confirmArchive": "Are you sure you want to archive this process?",
+      "processDeleted": "Process deleted successfully",
+      "processArchived": "Process archived successfully",
+      "processUpdated": "Process updated successfully",
+      "errorDeleting": "Error deleting process",
+      "errorArchiving": "Error archiving process",
+      "errorUpdating": "Error updating process"
     }
   },
   "emergency": {

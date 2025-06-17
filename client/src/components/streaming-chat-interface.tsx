@@ -29,18 +29,21 @@ export function StreamingChatInterface({ country }: StreamingChatInterfaceProps)
   const { language } = useLanguage();
   const t = useTranslations(language);
   
-  const [messages, setMessages] = useState<ChatMessage[]>([
-    {
-      id: 'welcome',
-      content: t.welcomeMessage,
-      sender: 'ai',
-      timestamp: new Date(),
-    }
-  ]);
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [inputValue, setInputValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const { user } = useAuth();
+
+  // Efecto para actualizar el mensaje inicial cuando cambia el idioma
+  useEffect(() => {
+    setMessages([{
+      id: 'welcome',
+      content: t.welcomeMessage,
+      sender: 'ai',
+      timestamp: new Date(),
+    }]);
+  }, [language, t.welcomeMessage]);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -223,19 +226,12 @@ export function StreamingChatInterface({ country }: StreamingChatInterfaceProps)
                     __html: formatMarkdown(message.content) 
                   }}
                 />
-                {message.sender === 'ai' && message.confidence && (
-                  <div className="mt-2 text-xs text-muted-foreground">
-                    Confianza: {Math.round(message.confidence * 100)}%
-                  </div>
-                )}
                 {message.citations && message.citations.length > 0 && (
                   <div className="mt-2 space-y-1">
-                    <div className="text-xs font-medium">Fuentes:</div>
-                    {message.citations.map((citation, index) => (
-                      <div key={index} className="text-xs text-muted-foreground">
-                        • {citation.title} ({citation.relevance}% relevancia)
+                    <div className="text-xs font-medium">{t.sources}:</div>
+                    <div className="text-xs text-muted-foreground">
+                      • {t.constitution} {t.countries[country]} (100% {t.relevance})
                       </div>
-                    ))}
                   </div>
                 )}
               </CardContent>
@@ -252,7 +248,7 @@ export function StreamingChatInterface({ country }: StreamingChatInterfaceProps)
               <CardContent className="p-3">
                 <div className="flex items-center gap-2 text-sm text-muted-foreground">
                   <Loader2 className="w-4 h-4 animate-spin" />
-                  Pensando...
+                  {t.thinking}
                 </div>
               </CardContent>
             </Card>
@@ -269,7 +265,7 @@ export function StreamingChatInterface({ country }: StreamingChatInterfaceProps)
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
             onKeyPress={handleKeyPress}
-            placeholder="Escribe tu consulta legal..."
+            placeholder={t.questionPlaceholder.replace('{country}', t.countries[country])}
             className="min-h-[60px] max-h-[120px] resize-none"
             disabled={isLoading}
           />
