@@ -6,6 +6,8 @@ import { Badge } from '@/components/ui/badge';
 import { ChevronLeft, ChevronRight, CheckCircle } from 'lucide-react';
 import type { ProcessDefinition } from '@/types';
 import { PROCESS_DEFINITIONS } from '@/types';
+import { useLanguage } from '@/contexts/LanguageContext';
+import { useTranslations } from '@/lib/i18n';
 
 interface ProcessModalProps {
   isOpen: boolean;
@@ -15,6 +17,8 @@ interface ProcessModalProps {
 
 export function ProcessModal({ isOpen, onClose, processType }: ProcessModalProps) {
   const [currentStep, setCurrentStep] = useState(0);
+  const { language } = useLanguage();
+  const t = useTranslations(language);
   
   if (!processType || !PROCESS_DEFINITIONS[processType]) {
     return null;
@@ -27,7 +31,7 @@ export function ProcessModal({ isOpen, onClose, processType }: ProcessModalProps
     if (currentStep < process.totalSteps - 1) {
       setCurrentStep(currentStep + 1);
     } else {
-      alert('¡Proceso completado exitosamente!');
+      alert(t.processSuccess.completed);
       onClose();
       setCurrentStep(0);
     }
@@ -45,71 +49,66 @@ export function ProcessModal({ isOpen, onClose, processType }: ProcessModalProps
   };
 
   const currentStepData = process.steps[currentStep] || {
-    title: `Paso ${currentStep + 1}`,
-    content: '<p>Contenido del paso en desarrollo...</p>',
+    title: `${t.step} ${currentStep + 1}`,
+    content: `<p>${t.processLoading}</p>`,
     completed: false
   };
 
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
-      <DialogContent className="max-w-2xl max-h-[90vh] overflow-hidden flex flex-col">
+      <DialogContent className="max-w-3xl">
         <DialogHeader>
-          <DialogTitle className="text-xl font-bold">{process.title}</DialogTitle>
+          <DialogTitle className="flex items-center justify-between">
+            <span>{process.title}</span>
+            <Badge variant={progress === 100 ? 'default' : 'secondary'}>
+              {progress === 100 ? t.processStatus.completed : t.processStatus.inProgress}
+            </Badge>
+          </DialogTitle>
         </DialogHeader>
 
-        <div className="flex-1 overflow-y-auto">
-          <div className="space-y-6 p-1">
-            {/* Progress Header */}
-            <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <h4 className="text-lg font-semibold text-neutral-900">
-                  Paso {currentStep + 1}
-                </h4>
-                <Badge variant="secondary">
-                  {currentStep + 1} de {process.totalSteps}
-                </Badge>
-              </div>
-              
-              <Progress value={progress} className="h-2" />
-              
-              <h5 className="text-xl font-semibold text-neutral-900">
-                {currentStepData.title}
-              </h5>
-            </div>
+        <div className="space-y-6">
+          <Progress value={progress} className="h-2" />
+          
+          <div className="flex items-center justify-between text-sm text-neutral-500">
+            <span>{t.currentStep}: {currentStep + 1}</span>
+            <span>{t.totalSteps}: {process.totalSteps}</span>
+          </div>
 
-            {/* Step Content */}
+          <div className="space-y-4">
+            <h3 className="text-lg font-semibold">{currentStepData.title}</h3>
             <div 
               className="prose prose-sm max-w-none"
               dangerouslySetInnerHTML={{ __html: currentStepData.content }}
             />
-
-            {/* Step Completion */}
-            <div className="flex items-center space-x-2 p-3 bg-green-50 border border-green-200 rounded-lg">
-              <CheckCircle className="w-5 h-5 text-green-600" />
-              <span className="text-sm text-green-700">
-                Marca como completado cuando hayas terminado este paso
-              </span>
-            </div>
           </div>
-        </div>
 
-        {/* Footer */}
-        <div className="flex justify-between pt-4 border-t">
-          <Button
-            onClick={handlePrev}
-            disabled={currentStep === 0}
-            variant="outline"
-          >
-            <ChevronLeft className="w-4 h-4 mr-2" />
-            Anterior
-          </Button>
-          
-          <Button onClick={handleNext} className="bg-blue-500 hover:bg-blue-600">
-            {currentStep === process.totalSteps - 1 ? 'Finalizar' : 'Siguiente'}
-            {currentStep < process.totalSteps - 1 && (
-              <ChevronRight className="w-4 h-4 ml-2" />
-            )}
-          </Button>
+          <div className="flex justify-between pt-4">
+            <Button
+              variant="outline"
+              onClick={handlePrev}
+              disabled={currentStep === 0}
+            >
+              <ChevronLeft className="w-4 h-4 mr-2" />
+              {t.previous}
+            </Button>
+
+            <Button
+              onClick={handleNext}
+              disabled={currentStepData.completed === false}
+            >
+              {currentStep === process.totalSteps - 1 ? (
+                <>
+                  <CheckCircle className="w-4 h-4 mr-2" />
+                  {t.processStatus.completed}
+                </>
+              ) : (
+                <>
+                  {t.next}
+                  <ChevronRight className="w-4 h-4 ml-2" />
+                </>
+              )}
+            </Button>
+          </div>
         </div>
       </DialogContent>
     </Dialog>

@@ -12,6 +12,8 @@ import { Progress } from '@/components/ui/progress';
 import { Plus, FileText, Clock, CheckCircle, AlertCircle, ArrowLeft } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { Link } from 'wouter';
+import { useLanguage } from '@/contexts/LanguageContext';
+import { useTranslations } from '@/lib/i18n';
 
 interface ProcessSummary {
   id: string;
@@ -47,6 +49,8 @@ export function ProcessList() {
   });
   const { toast } = useToast();
   const queryClient = useQueryClient();
+  const { language } = useLanguage();
+  const t = useTranslations(language);
 
   const { data: processes = [], isLoading } = useQuery<ProcessSummary[]>({
     queryKey: ['/api/processes'],
@@ -74,14 +78,14 @@ export function ProcessList() {
   });
 
   const processTypes = [
-    { value: 'civil', label: 'Proceso Civil' },
-    { value: 'penal', label: 'Proceso Penal' },
-    { value: 'laboral', label: 'Proceso Laboral' },
-    { value: 'administrativo', label: 'Proceso Administrativo' },
-    { value: 'familia', label: 'Derecho de Familia' },
-    { value: 'comercial', label: 'Derecho Comercial' },
-    { value: 'constitucional', label: 'Proceso Constitucional' },
-    { value: 'otros', label: 'Otros' }
+    { value: 'civil', label: t.processTypes.civil },
+    { value: 'penal', label: t.processTypes.penal },
+    { value: 'laboral', label: t.processTypes.laboral },
+    { value: 'administrativo', label: t.processTypes.administrativo },
+    { value: 'familia', label: t.processTypes.familia },
+    { value: 'comercial', label: t.processTypes.comercial },
+    { value: 'constitucional', label: t.processTypes.constitucional },
+    { value: 'otros', label: t.processTypes.otros }
   ];
 
   const getStatusColor = (status: string) => {
@@ -95,10 +99,10 @@ export function ProcessList() {
 
   const getStatusText = (status: string) => {
     switch (status) {
-      case 'completed': return 'Completado';
-      case 'in_progress': return 'En Progreso';
-      case 'pending': return 'Pendiente';
-      default: return 'Desconocido';
+      case 'completed': return t.processStatus.completed;
+      case 'in_progress': return t.processStatus.inProgress;
+      case 'pending': return t.processStatus.pending;
+      default: return t.processStatus.pending;
     }
   };
 
@@ -113,10 +117,10 @@ export function ProcessList() {
 
   const getPriorityText = (priority: string) => {
     switch (priority) {
-      case 'high': return 'Alta';
-      case 'medium': return 'Media';
-      case 'low': return 'Baja';
-      default: return 'Normal';
+      case 'high': return t.processPriorities.high;
+      case 'medium': return t.processPriorities.medium;
+      case 'low': return t.processPriorities.low;
+      default: return t.processPriorities.medium;
     }
   };
 
@@ -131,7 +135,7 @@ export function ProcessList() {
         <div className="flex items-center justify-center h-64">
           <div className="text-center">
             <Clock className="h-8 w-8 animate-spin mx-auto mb-2" />
-            <p>Cargando procesos...</p>
+            <p>{t.processLoading}</p>
           </div>
         </div>
       </main>
@@ -152,9 +156,9 @@ export function ProcessList() {
             </Button>
           </Link>
           <div>
-            <h1 className="text-2xl font-bold text-neutral-900">Procesos Legales</h1>
+            <h1 className="text-2xl font-bold text-neutral-900">{t.myProcesses}</h1>
             <p className="text-sm text-neutral-500">
-              Gestiona tus procesos legales y haz seguimiento a cada paso
+              {t.processDescription}
             </p>
           </div>
         </div>
@@ -164,40 +168,40 @@ export function ProcessList() {
             <DialogTrigger asChild>
               <Button className="flex items-center gap-2">
                 <Plus className="h-4 w-4" />
-                Nuevo Proceso
+                {t.createProcess}
               </Button>
             </DialogTrigger>
             <DialogContent className="max-w-md">
               <DialogHeader>
-                <DialogTitle>Crear Nuevo Proceso</DialogTitle>
+                <DialogTitle>{t.createProcess}</DialogTitle>
                 <DialogDescription>
-                  Ingresa los detalles básicos de tu proceso legal
+                  {t.processDescription}
                 </DialogDescription>
               </DialogHeader>
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
-                  <Label htmlFor="title">Título del Proceso</Label>
+                  <Label htmlFor="title">{t.processTitle}</Label>
                   <Input
                     id="title"
                     value={formData.title}
                     onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                    placeholder="Ej: Demanda por incumplimiento de contrato"
+                    placeholder={t.processTitle}
                     required
                   />
                 </div>
                 <div>
-                  <Label htmlFor="type">Tipo de Proceso</Label>
+                  <Label htmlFor="type">{t.processType}</Label>
                   <Select
                     value={formData.type}
                     onValueChange={(value) => setFormData({ ...formData, type: value })}
                     required
                   >
                     <SelectTrigger>
-                      <SelectValue placeholder="Selecciona el tipo" />
+                      <SelectValue placeholder={t.processType} />
                     </SelectTrigger>
                     <SelectContent>
-                      {processTypes.map((type, index) => (
-                        <SelectItem key={type.value || `type-${index}`} value={type.value}>
+                      {processTypes.map((type) => (
+                        <SelectItem key={type.value} value={type.value}>
                           {type.label}
                         </SelectItem>
                       ))}
@@ -205,17 +209,17 @@ export function ProcessList() {
                   </Select>
                 </div>
                 <div>
-                  <Label htmlFor="description">Descripción</Label>
+                  <Label htmlFor="description">{t.processDescription}</Label>
                   <Textarea
                     id="description"
                     value={formData.description}
                     onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                    placeholder="Describe brevemente el caso..."
+                    placeholder={t.processDescription}
                     rows={3}
                   />
                 </div>
                 <div>
-                  <Label htmlFor="priority">Prioridad</Label>
+                  <Label htmlFor="priority">{t.priority}</Label>
                   <Select
                     value={formData.priority}
                     onValueChange={(value: 'low' | 'medium' | 'high') => 
@@ -226,14 +230,14 @@ export function ProcessList() {
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="low">Baja</SelectItem>
-                      <SelectItem value="medium">Media</SelectItem>
-                      <SelectItem value="high">Alta</SelectItem>
+                      <SelectItem value="low">{t.processPriorities.low}</SelectItem>
+                      <SelectItem value="medium">{t.processPriorities.medium}</SelectItem>
+                      <SelectItem value="high">{t.processPriorities.high}</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
                 <div>
-                  <Label htmlFor="deadline">Fecha Límite (Opcional)</Label>
+                  <Label htmlFor="deadline">{t.processDeadline}</Label>
                   <Input
                     id="deadline"
                     type="date"
@@ -247,14 +251,14 @@ export function ProcessList() {
                     disabled={createProcessMutation.isPending}
                     className="flex-1"
                   >
-                    {createProcessMutation.isPending ? 'Creando...' : 'Crear Proceso'}
+                    {createProcessMutation.isPending ? t.processLoading : t.createProcess}
                   </Button>
                   <Button 
                     type="button" 
                     variant="outline" 
                     onClick={() => setShowCreateDialog(false)}
                   >
-                    Cancelar
+                    {t.cancel}
                   </Button>
                 </div>
               </form>
@@ -281,13 +285,13 @@ export function ProcessList() {
                           {getPriorityText(process.metadata?.priority)}
                         </Badge>
                         <span className="text-sm text-neutral-500">
-                          Creado el {new Date(process.createdAt).toLocaleDateString('es-ES')}
+                          {t.processCreatedOn} {new Date(process.createdAt).toLocaleDateString(language === 'es' ? 'es-ES' : 'en-US')}
                         </span>
                       </div>
                     </div>
                     <Link href={`/processes/${process.id || process._id}`}>
                       <Button variant="outline" size="sm">
-                        Ver Detalles
+                        {t.processViewDetails}
                       </Button>
                     </Link>
                   </div>
@@ -302,13 +306,13 @@ export function ProcessList() {
             <Card>
               <CardContent className="text-center py-8">
                 <FileText className="h-8 w-8 mx-auto mb-2 text-neutral-400" />
-                <p className="text-neutral-500">No hay procesos activos</p>
+                <p className="text-neutral-500">{t.processNoActive}</p>
                 <Button 
                   variant="link" 
                   className="text-blue-500 mt-2"
                   onClick={() => setShowCreateDialog(true)}
                 >
-                  Crear primer proceso
+                  {t.processCreateFirst}
                 </Button>
               </CardContent>
             </Card>
